@@ -1,0 +1,15 @@
+{
+  "name": "tropolink",
+  "version": "1.0.0",
+  "description": "TropoLink - troposcatter link design tool",
+  "dependencies": [
+    {
+      "name": "gdal",
+      "default-features": false
+    },
+    "geographiclib",
+    "nlohmann-json",
+    "libzip",
+    "gtest"
+  ]
+}

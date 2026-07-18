@@ -1,0 +1,29 @@
+# TropoLink static-analysis profile.
+# Core rules: RAII everywhere (no owning raw pointers), no narrowing surprises,
+# const-correctness, and readable naming.
+Checks: >
+  clang-analyzer-*,
+  bugprone-*,
+  performance-*,
+  modernize-*,
+  readability-identifier-naming,
+  cppcoreguidelines-owning-memory,
+  cppcoreguidelines-no-malloc,
+  -modernize-use-trailing-return-type,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-narrowing-conversions
+WarningsAsErrors: 'clang-analyzer-*,cppcoreguidelines-owning-memory,cppcoreguidelines-no-malloc'
+HeaderFilterRegex: '(core|ui|app)[/\\].*'
+CheckOptions:
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.FunctionCase
+    value: camelBack
+  - key: readability-identifier-naming.VariableCase
+    value: camelBack
+  - key: readability-identifier-naming.PrivateMemberSuffix
+    value: '_'
+  - key: readability-identifier-naming.EnumCase
+    value: CamelCase
+  - key: readability-identifier-naming.NamespaceCase
+    value: lower_case

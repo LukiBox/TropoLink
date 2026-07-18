@@ -1,0 +1,10 @@
+* text=auto
+*.png binary
+*.mbtiles binary
+*.dt0 binary
+*.dt1 binary
+*.dt2 binary
+*.hgt binary
+*.tif binary
+*.tlk binary
+*.pdf binary

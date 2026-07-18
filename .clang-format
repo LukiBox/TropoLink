@@ -1,0 +1,14 @@
+# TropoLink code style — LLVM base, 4-space indent, 110 columns.
+BasedOnStyle: LLVM
+IndentWidth: 4
+ColumnLimit: 110
+PointerAlignment: Left
+DerivePointerAlignment: false
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortLambdasOnASingleLine: All
+BreakBeforeBraces: Attach
+SortIncludes: CaseSensitive
+IncludeBlocks: Preserve
+AlwaysBreakTemplateDeclarations: Yes
+SpaceAfterTemplateKeyword: true
+Standard: c++20

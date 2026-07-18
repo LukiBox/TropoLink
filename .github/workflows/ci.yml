@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: "6.8.3"
+          arch: win64_msvc2022_64
+      - name: vcpkg
+        uses: lukka/run-vcpkg@v11
+      - name: Configure
+        run: cmake --preset windows-release -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
+      - name: Build
+        run: cmake --build --preset windows-release
+      - name: Test
+        run: ctest --preset windows-release
+
+  linux-sanitizers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: vcpkg
+        uses: lukka/run-vcpkg@v11
+      - name: Configure (core + tests, ASan/UBSan)
+        run: cmake --preset ci-linux-sanitizers
+      - name: Build
+        run: cmake --build build/ci-linux-sanitizers
+      - name: Test
+        run: ctest --test-dir build/ci-linux-sanitizers --output-on-failure
+
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: clang-format check
+        run: |
+          sudo apt-get update && sudo apt-get install -y clang-format
+          find core app ui tests -name '*.cpp' -o -name '*.h' | xargs clang-format --dry-run --Werror

@@ -1,0 +1,79 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_PREFIX_PATH": "C:/Qt/6.8.3/msvc2022_64",
+        "VCPKG_TARGET_TRIPLET": "x64-windows"
+      }
+    },
+    {
+      "name": "windows-release",
+      "displayName": "Windows x64 Release",
+      "inherits": "base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    },
+    {
+      "name": "windows-debug",
+      "displayName": "Windows x64 Debug",
+      "inherits": "base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+    },
+    {
+      "name": "windows-airgap",
+      "displayName": "Windows x64 Release (Air-Gap flavor)",
+      "inherits": "windows-release",
+      "cacheVariables": { "TROPOLINK_AIRGAP": "ON" }
+    },
+    {
+      "name": "windows-asan",
+      "displayName": "Windows x64 Debug + ASan (core tests)",
+      "inherits": "windows-debug",
+      "cacheVariables": {
+        "TROPOLINK_SANITIZE": "ON",
+        "TROPOLINK_BUILD_UI": "OFF"
+      }
+    },
+    {
+      "name": "ci-linux-sanitizers",
+      "displayName": "Linux core + tests with ASan/UBSan (CI)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "TROPOLINK_BUILD_UI": "OFF",
+        "TROPOLINK_SANITIZE": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "windows-release", "configurePreset": "windows-release" },
+    { "name": "windows-debug", "configurePreset": "windows-debug" },
+    { "name": "windows-airgap", "configurePreset": "windows-airgap" },
+    { "name": "windows-asan", "configurePreset": "windows-asan" }
+  ],
+  "testPresets": [
+    {
+      "name": "windows-release",
+      "configurePreset": "windows-release",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "windows-debug",
+      "configurePreset": "windows-debug",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "windows-asan",
+      "configurePreset": "windows-asan",
+      "output": { "outputOnFailure": true }
+    }
+  ]
+}
