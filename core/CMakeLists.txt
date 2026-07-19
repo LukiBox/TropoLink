@@ -1,10 +1,5 @@
 # tropolink_core: pure C++20, no Qt UI types, unit-typed quantities throughout.
 
-find_package(GDAL CONFIG REQUIRED)
-find_package(GeographicLib CONFIG REQUIRED)
-find_package(nlohmann_json CONFIG REQUIRED)
-find_package(libzip CONFIG REQUIRED)
-
 add_library(tropolink_core STATIC
     common/sha256.cpp
     geo/geodesy.cpp

@@ -1,0 +1,15 @@
+{
+  "comment": "Editable equipment library: representative troposcatter antennas and radios. Values are generic engineering placeholders, not vendor data.",
+  "antennas": [
+    { "name": "1.2 m dish", "gainDbi": 32.0, "diameterM": 1.2 },
+    { "name": "2.4 m dish", "gainDbi": 37.5, "diameterM": 2.4 },
+    { "name": "3.0 m dish", "gainDbi": 39.1, "diameterM": 3.0 },
+    { "name": "4.5 m dish", "gainDbi": 42.8, "diameterM": 4.5 },
+    { "name": "9.0 m dish", "gainDbi": 48.5, "diameterM": 9.0 }
+  ],
+  "radios": [
+    { "name": "50 W SSPA",  "txPowerDbm": 47.0, "noiseFigureDb": 4.0 },
+    { "name": "500 W SSPA", "txPowerDbm": 57.0, "noiseFigureDb": 4.0 },
+    { "name": "2 kW TWT",   "txPowerDbm": 63.0, "noiseFigureDb": 5.0 }
+  ]
+}

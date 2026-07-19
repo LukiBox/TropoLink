@@ -1,6 +1,3 @@
-find_package(GTest CONFIG REQUIRED)
-find_package(GDAL CONFIG REQUIRED) # test fixtures write synthetic DEMs through GDAL
-
 add_executable(tropolink_tests
     test_units.cpp
     test_geodesy.cpp

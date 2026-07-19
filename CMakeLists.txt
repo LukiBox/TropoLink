@@ -22,8 +22,28 @@ endif()
 
 include(cmake/CompilerWarnings.cmake)
 
+# All dependency lookups happen at the top level so every subdirectory scope sees
+# the imported targets (required by Qt's target finalizers).
+find_package(GDAL CONFIG REQUIRED)
+find_package(GeographicLib CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
+find_package(libzip CONFIG REQUIRED)
+if(TROPOLINK_BUILD_TESTS)
+    find_package(GTest CONFIG REQUIRED)
+endif()
+if(TROPOLINK_BUILD_UI)
+    find_package(Qt6 6.7 REQUIRED COMPONENTS Quick QuickControls2 Svg LinguistTools)
+    if(NOT TROPOLINK_AIRGAP)
+        find_package(Qt6 REQUIRED COMPONENTS Network)
+    endif()
+    find_package(unofficial-sqlite3 CONFIG REQUIRED)
+    find_package(ZLIB REQUIRED)
+    qt_standard_project_setup(REQUIRES 6.7 I18N_TRANSLATED_LANGUAGES pl)
+endif()
+
 add_subdirectory(third_party/ntia_itm)
 add_subdirectory(core)
+add_subdirectory(tools)
 
 if(TROPOLINK_BUILD_UI)
     add_subdirectory(ui)

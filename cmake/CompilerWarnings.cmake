@@ -11,6 +11,7 @@ function(tropolink_set_warnings target)
             /external:anglebrackets
             /external:W0
             /wd4127          # conditional expression is constant — fires on legitimate if constexpr fallbacks
+            /wd4702          # unreachable code — fires inside Qt headers from qmlcachegen-generated TUs
         )
         if(TROPOLINK_WARNINGS_AS_ERRORS)
             target_compile_options(${target} PRIVATE /WX)

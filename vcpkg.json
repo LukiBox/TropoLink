@@ -10,6 +10,8 @@
     "geographiclib",
     "nlohmann-json",
     "libzip",
+    "sqlite3",
+    "zlib",
     "gtest"
   ]
 }

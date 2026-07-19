@@ -1,0 +1,12 @@
+{
+  "comment": "Editable modulation library. requiredEbN0Db values are uncoded theoretical references at BER 1e-6 (Proakis, Digital Communications, 5th ed.). Replace with modem data-sheet values for a specific radio.",
+  "modulations": [
+    { "name": "BPSK",  "bitsPerSymbol": 1.0, "requiredEbN0Db": 10.5, "rolloff": 0.35 },
+    { "name": "QPSK",  "bitsPerSymbol": 2.0, "requiredEbN0Db": 10.5, "rolloff": 0.35 },
+    { "name": "8PSK",  "bitsPerSymbol": 3.0, "requiredEbN0Db": 14.0, "rolloff": 0.35 },
+    { "name": "16QAM", "bitsPerSymbol": 4.0, "requiredEbN0Db": 14.4, "rolloff": 0.35 },
+    { "name": "64QAM", "bitsPerSymbol": 6.0, "requiredEbN0Db": 18.8, "rolloff": 0.35 },
+    { "name": "QPSK LDPC 1/2", "bitsPerSymbol": 1.0, "requiredEbN0Db": 3.0, "rolloff": 0.25 },
+    { "name": "16QAM LDPC 3/4", "bitsPerSymbol": 3.0, "requiredEbN0Db": 7.5, "rolloff": 0.25 }
+  ]
+}
