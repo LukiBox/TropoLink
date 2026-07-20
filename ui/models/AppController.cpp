@@ -326,9 +326,16 @@ void AppController::setLanguageCode(const QString& code) {
     if (languageCode_ == code) {
         return;
     }
-    languageCode_ = code;
+    setLanguageCodeTransient(code);
     QSettings settings;
     settings.setValue("ui/language", code);
+}
+
+void AppController::setLanguageCodeTransient(const QString& code) {
+    if (languageCode_ == code) {
+        return;
+    }
+    languageCode_ = code;
     emit languageChanged();
 }
 

@@ -59,9 +59,10 @@ int main(int argc, char* argv[]) {
     if (reportIdx >= 0 && reportIdx + 1 < args.size()) {
         AppController controller;
         const int langIdx = static_cast<int>(args.indexOf(QStringLiteral("--lang")));
-        controller.setLanguageCode(langIdx >= 0 && langIdx + 1 < args.size()
-                                       ? args.at(langIdx + 1)
-                                       : QStringLiteral("pl"));
+        // Transient: generating a report must not rewrite the operator's UI language.
+        controller.setLanguageCodeTransient(langIdx >= 0 && langIdx + 1 < args.size()
+                                                ? args.at(langIdx + 1)
+                                                : QStringLiteral("pl"));
         controller.loadReferenceProject();
         // Wait for the compute pipeline to settle, then render.
         QObject::connect(&controller, &AppController::reportGenerated, &app,

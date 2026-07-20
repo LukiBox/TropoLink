@@ -210,6 +210,9 @@ public:
     }
     QString languageCode() const { return languageCode_; }
     void setLanguageCode(const QString& code);
+    // Headless report mode: pick the report language without rewriting the
+    // operator's stored UI preference.
+    void setLanguageCodeTransient(const QString& code);
     bool darkTheme() const { return darkTheme_; }
     void setDarkTheme(bool v);
     QVariantList terrainEntries() const;
