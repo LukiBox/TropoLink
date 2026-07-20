@@ -6,6 +6,7 @@ ColumnLayout {
     id: section
     property string title: ""
     property bool expanded: true
+    property string helpTopic: "" // set to show a "?" opening the detailed guide
     default property alias content: inner.data
     spacing: 4
     Layout.fillWidth: true
@@ -29,6 +30,13 @@ ColumnLayout {
         MouseArea {
             anchors.fill: parent
             onClicked: section.expanded = !section.expanded
+        }
+        HelpButton {
+            visible: section.helpTopic.length > 0
+            anchors.right: parent.right
+            anchors.rightMargin: 6
+            anchors.verticalCenter: parent.verticalCenter
+            topic: section.helpTopic
         }
     }
     ColumnLayout {

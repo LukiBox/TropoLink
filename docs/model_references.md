@@ -20,6 +20,7 @@ TropoLink shows the disagreement as the design uncertainty; it never averages it
 | Quantity | Method | Source |
 |---|---|---|
 | Elevation sampling | Bilinear on DTED 0/1/2, SRTM HGT, GeoTIFF | GDAL; MIL-PRF-89020B (DTED) |
+| Profile step | finest covering dataset resolution, clamped to [30 m, 90 m], then widened as needed to cap the profile at 16384 samples | engineering limit: beyond ~16k samples a finer step adds nothing to horizon/mean-elevation accuracy (still < 70 m posts at 1000 km) while cost grows without bound |
 | Void handling | NODATA interpolated linearly between valid neighbours and **flagged** | design rule: never silently invented terrain |
 | Horizon/takeoff angle | θ_t = max_i[(h_i − h_a)/d_i − d_i/(2ka)] | NBS TN101 §6 convention; identical construction in NTIA ITM `FindHorizons` |
 | Earth bulge | c(x) = x(d−x)/(2ka) | standard effective-earth transform |
@@ -104,7 +105,24 @@ cross-check.
 | Required SNR | Eb/N0 + 10 log(bits/symbol / (1+rolloff)); library values are uncoded theoretical references at BER 1e-6 (Proakis) — editable JSON |
 | Waterfall | sums exactly by construction; regression-tested |
 
-## 7. Determinism
+## 7. Map cartography (`ui/map/MapSources.cpp`)
+
+The offline basemap is a rendering, not a data product — it never feeds computation.
+It is documented here so its appearance is not mistaken for surveyed cartography.
+
+| Element | Method |
+|---|---|
+| Relief shading | Horn's method (3×3 Sobel gradients) on the DEM, sun at 315° azimuth / 45° elevation, multiplied over the tint; vertical exaggeration 1.3–5.0 growing as the view zooms out |
+| Hypsometric tint | 10-stop ramp (woodland green → cream → tan → brown → grey) interpolated on elevation; separate day/night ramps |
+| Contours | Level set of the smoothed DEM, anti-aliased by distance-to-level measured in screen pixels through the local gradient; every 5th is an index contour, labelled and rotated along the contour with a paper halo. Interval per zoom: 200 m (z7) → 5 m (z≥15) |
+| Pre-filter | Two passes of 3×3 binomial smoothing (≈ Gaussian σ 1) to suppress DEM posting steps; a seam guard suppresses ink where a pixel is further than 0.4 × interval from its level, so an elevation step between adjacent datasets cannot etch a false contour |
+| Coverage | Pixels with no DEM coverage are left transparent (blank map paper), never drawn as sea level |
+
+Water is shown only where the DEM is at or below datum; inland hydrography and
+culture (roads, settlements) are not in a DEM — use an online source or an MBTiles
+pack when that detail is needed.
+
+## 8. Determinism
 
 Identical inputs produce bit-identical outputs: fixed grids and iteration counts, no
 order-dependent parallel reductions (profile samples land in preassigned slots), and

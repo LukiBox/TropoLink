@@ -1,8 +1,12 @@
 set(TROPOLINK_UI_SOURCES
     models/AppController.cpp
     models/AppController.h
+    models/HelpContent.cpp
+    models/HelpContent.h
     map/MapSources.cpp
     map/MapSources.h
+    map/MapDownloader.cpp
+    map/MapDownloader.h
     map/TileMapItem.cpp
     map/TileMapItem.h
     map/MapOverlayItem.cpp
@@ -37,6 +41,9 @@ qt_add_qml_module(tropolink_ui
         qml/NumberField.qml
         qml/StatusBar.qml
         qml/OnboardingTour.qml
+        qml/HelpButton.qml
+        qml/HelpDialog.qml
+        qml/MapDownloadDialog.qml
 )
 
 target_include_directories(tropolink_ui PUBLIC ${CMAKE_SOURCE_DIR})

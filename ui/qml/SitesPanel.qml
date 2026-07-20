@@ -71,6 +71,7 @@ ScrollView {
 
         SiteEditor {
             title: qsTr("Site A")
+            helpTopic: "sites"
             siteIndex: 0
             lat: controller.siteALat
             lon: controller.siteALon
@@ -78,6 +79,7 @@ ScrollView {
         }
         SiteEditor {
             title: qsTr("Site B")
+            helpTopic: "sites"
             siteIndex: 1
             lat: controller.siteBLat
             lon: controller.siteBLon
@@ -86,6 +88,7 @@ ScrollView {
 
         PanelSection {
             title: qsTr("Radio")
+            helpTopic: "radio"
             RowLayout {
                 Layout.fillWidth: true
                 Text {
@@ -231,6 +234,7 @@ ScrollView {
 
         PanelSection {
             title: qsTr("Atmosphere & climate")
+            helpTopic: "atmosphere"
             RowLayout {
                 Layout.fillWidth: true
                 Text {
@@ -288,6 +292,7 @@ ScrollView {
 
         PanelSection {
             title: qsTr("Terrain store")
+            helpTopic: "terrain"
             Repeater {
                 model: controller.terrainEntries
                 RowLayout {

@@ -29,6 +29,26 @@ its own line. Validity envelopes are enforced: outside its envelope a model says
 *out of validity range* rather than extrapolating. Every displayed value carries its
 formula/source on hover; `docs/model_references.md` cites every equation.
 
+## Maps
+
+Three basemap layers, chosen from the **Basemap** selector on the map bar. Whatever
+is selected, the link line, common volume, horizon fans and MGRS grid draw on top.
+
+| Layer | Needs network | What it is |
+|---|---|---|
+| **Terrain (offline)** — default | never | A topographic sheet rendered from the loaded DEMs themselves: hypsometric tints, Horn relief shading, and elevation contours with labelled index contours (every 5th). Contour interval follows the zoom (200 m → 5 m). |
+| **OpenTopoMap / OSM** | first view only | Online XYZ raster tiles, cached permanently on disk — an area browsed once stays available offline. Standard flavor only. |
+| **MBTiles pack** | never | Any standard raster `.mbtiles` (yours, one from MOBAC/QGIS, or one built by the in-app downloader). Over-zooms gracefully past the pack's max zoom. |
+
+**Download offline maps…** (map bar, standard flavor) packs an area — the current
+view or a corridor along the A–B path — into a `.mbtiles` file over a chosen zoom
+range, with a live tile-count/size estimate, a 30,000-tile ceiling, polite paced
+requests, and reuse of already-cached tiles. The finished pack becomes the active
+basemap and can be copied to an air-gapped machine.
+
+The **?** button on every panel header opens a detailed bilingual guide for that
+panel; the **Help** toolbar button opens the full manual (14 topics, PL/EN).
+
 ## Building (Windows-first, core portable)
 
 Prerequisites: Visual Studio 2022 Build Tools (MSVC v143 + Windows 11 SDK),
@@ -71,10 +91,12 @@ core/          pure C++20, no Qt UI types, unit-typed quantities
   project/     .tlk files (JSON-in-zip), KML/CSV export
   report/      bilingual report content + SHA-256 hash
   ai/          optional loopback-only Ollama client (absent in Air-Gap)
-ui/            Qt Quick UI: offline tile map (MBTiles + DEM hillshade),
-               scene-graph profile view with the common-volume lens, panels, PDF renderer
+ui/            Qt Quick UI: tile map (paper-topo DEM rendering, MBTiles, optional
+               online tiles + downloader), scene-graph profile view with the
+               common-volume lens, panels, bilingual help, PDF renderer
 resources/     ITU N0/ΔN maps, modulation & equipment libraries, bundled DTED-0
-tools/         make_dted — derive spec-correct DTED 0/1/2 from any GDAL DEM
+tools/         make_dted — derive spec-correct DTED 0/1/2 from any GDAL DEM;
+               render_topo_preview — offscreen map-cartography preview (dev aid)
 tests/         GoogleTest suite (51 tests): geodesy, terrain, tropo, budget, project
 docs/          model_references.md (every equation cited), third_party.md
 ```

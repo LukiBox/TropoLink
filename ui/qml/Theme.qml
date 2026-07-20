@@ -6,6 +6,9 @@ QtObject {
     id: theme
     property bool dark: true
 
+    // Help routing: HelpButtons anywhere emit this; Main.qml opens the dialog.
+    signal openHelp(string topic)
+
     readonly property color bg: dark ? "#14181d" : "#f2f4f6"
     readonly property color panel: dark ? "#1c2229" : "#ffffff"
     readonly property color panelAlt: dark ? "#222a33" : "#e8ecf0"

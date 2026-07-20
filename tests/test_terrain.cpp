@@ -125,6 +125,33 @@ TEST(Terrain, VoidsAreInterpolatedAndFlagged) {
     EXPECT_TRUE(sawFlagged);
 }
 
+TEST(Terrain, VeryLongPathSampleCountStaysBounded) {
+    // Regression: an intercontinental path used to be sampled at the DEM step for its
+    // whole length, allocating tens of thousands of points per interactive recompute
+    // (the UI froze and eventually died while a pin was being dragged). The extractor
+    // now widens the step instead, capping the profile at 16384 samples while keeping
+    // the endpoints and total distance exact.
+    const auto path = writeSyntheticDem("longpath.tif", 35.0, 61.0, 14.0, 16.0, 64,
+                                        [](double lat, double) { return 50.0 + 2.0 * (lat - 35.0); });
+    const auto storeDir = (testDir() / "store_long").string();
+    auto store = TerrainStore::open(storeDir);
+    ASSERT_TRUE(store.hasValue());
+    ASSERT_TRUE(store.value()->importFile(path, Provenance::Imported).hasValue());
+
+    ProfileRequest req; // ~2670 km, Mediterranean to central Sweden
+    req.siteA = GeoPoint{Degrees(36.0), Degrees(15.0)};
+    req.siteB = GeoPoint{Degrees(60.0), Degrees(15.0)};
+    const auto profile = extractProfile(*store.value(), req);
+    ASSERT_TRUE(profile.hasValue());
+    const auto& p = profile.value();
+    EXPECT_LE(p.points.size(), 16384U);
+    EXPECT_GT(p.points.size(), 4096U); // still finely sampled, not degenerate
+    EXPECT_NEAR(p.totalDistance.kilometers(), 2664.0, 20.0);
+    EXPECT_NEAR(p.points.back().distance.value(), p.totalDistance.value(), 1.0);
+    // Step widened to cover the distance with the capped sample count.
+    EXPECT_NEAR(p.step.value() * (p.points.size() - 1), p.totalDistance.value(), 1.0);
+}
+
 TEST(Terrain, HorizonAnglesMatchHandComputedFixture) {
     // Flat 100 m terrain with a single 500 m ridge at 30 km out of 100 km.
     // Antenna A at 100 + 10 m AGL. Hand-computed takeoff angle to the ridge crest:

@@ -59,8 +59,18 @@ Expected<Profile> extractProfile(const TerrainStore& store, const ProfileRequest
         step = Meters(std::clamp(finest, 30.0, 90.0));
     }
 
-    const int sampleCount =
+    // Hard cap on the sample count: beyond ~16k samples a finer step adds nothing to
+    // horizon/mean-elevation accuracy but scales memory and time without bound (an
+    // interactively dragged 2000 km path must not allocate 60k-sample profiles at
+    // 120 ms cadence). The step widens instead; the cap still leaves <70 m posts at
+    // 1000 km, finer than any global DEM's information content over such paths.
+    constexpr int kMaxSamples = 16384;
+    int sampleCount =
         std::max(2, static_cast<int>(std::ceil(inverse.distance.value() / step.value())) + 1);
+    if (sampleCount > kMaxSamples) {
+        sampleCount = kMaxSamples;
+        step = Meters(inverse.distance.value() / (kMaxSamples - 1));
+    }
     const auto line = geo::Geodesy::sampleLine(request.siteA, request.siteB, sampleCount);
 
     Profile profile;

@@ -5,6 +5,7 @@
 #include "core/project/kml_export.h"
 #include "core/terrain/horizon.h"
 #include "core/tropo/fspl.h"
+#include "ui/models/HelpContent.h"
 #include "ui/report/PdfReport.h"
 
 #include <gdal.h>
@@ -94,16 +95,29 @@ AppController::AppController(QObject* parent) : QObject(parent) {
 
     QSettings settings;
     darkTheme_ = settings.value("ui/darkTheme", true).toBool();
+    mapOnlineSource_ = settings.value("ui/mapOnlineSource", QString()).toString();
+    mapBasemapPath_ = settings.value("ui/mapBasemapPath", QString()).toString();
+    if (!mapBasemapPath_.isEmpty() && !QFile::exists(mapBasemapPath_)) {
+        mapBasemapPath_.clear(); // pack moved or deleted since last run
+    }
 
     debounce_.setSingleShot(true);
     debounce_.setInterval(120);
     connect(&debounce_, &QTimer::timeout, this, [this] { recompute(true); });
 
+    // One computation at a time; superseded ones are stop-requested and queued
+    // stale jobs exit immediately on the revision check.
+    computePool_.setMaxThreadCount(1);
+
     refreshAutoAtmosphere();
     recompute(true);
 }
 
-AppController::~AppController() { QThreadPool::globalInstance()->waitForDone(2000); }
+AppController::~AppController() {
+    computeStop_.request_stop();
+    computePool_.waitForDone(5000);
+    QThreadPool::globalInstance()->waitForDone(2000);
+}
 
 // --- setters ----------------------------------------------------------------
 
@@ -447,24 +461,35 @@ void AppController::recompute(bool immediate) {
         busy_ = true;
         emit busyChanged();
     }
+    // Cancel the running computation (if any) and hand the new state to the
+    // serialized compute pool. Queued stale jobs exit on the revision check.
+    computeStop_.request_stop();
+    computeStop_ = std::stop_source{};
     LinkState state = link_;
-    QThreadPool::globalInstance()->start([this, rev, state] { runComputation(rev, state); });
+    std::stop_token token = computeStop_.get_token();
+    computePool_.start([this, rev, state, token] { runComputation(rev, state, token); });
 }
 
-void AppController::runComputation(quint64 rev, LinkState state) {
+void AppController::runComputation(quint64 rev, LinkState state, std::stop_token stopToken) {
+    if (revision_.load() != rev || stopToken.stop_requested()) {
+        return; // superseded while queued
+    }
     QElapsedTimer timer;
     timer.start();
     auto outcome = std::make_shared<ComputeOutcome>();
     outcome->revision = rev;
 
-    // 1) Terrain profile (multithreaded inside).
+    // 1) Terrain profile (multithreaded inside, cancellable).
     terrain::ProfileRequest preq;
     preq.siteA = state.siteA;
     preq.siteB = state.siteB;
     if (terrainStore_) {
-        if (auto profile = terrain::extractProfile(*terrainStore_, preq)) {
+        if (auto profile = terrain::extractProfile(*terrainStore_, preq, stopToken)) {
             outcome->profile = std::move(profile).value();
         }
+    }
+    if (stopToken.stop_requested()) {
+        return;
     }
     if (outcome->profile.points.empty()) {
         // No store or co-located sites: synthesize a smooth sea-level profile so the
@@ -997,6 +1022,34 @@ QString AppController::provenance(const QString& key) const {
         {"separation", QStringLiteral("ITU-R P.617-5 §7 eq. (44)-(47)")},
     };
     return table.value(key, QStringLiteral(""));
+}
+
+QVariantList AppController::helpTopics() const {
+    return tropolinkHelpTopics(languageCode_ == QLatin1String("pl"));
+}
+
+QString AppController::helpHtml(const QString& topic) const {
+    return tropolinkHelpHtml(topic, languageCode_ == QLatin1String("pl"));
+}
+
+void AppController::setMapOnlineSource(const QString& id) {
+    if (mapOnlineSource_ == id) {
+        return;
+    }
+    mapOnlineSource_ = id;
+    QSettings settings;
+    settings.setValue("ui/mapOnlineSource", id);
+    emit mapSettingsChanged();
+}
+
+void AppController::setMapBasemapPath(const QString& path) {
+    if (mapBasemapPath_ == path) {
+        return;
+    }
+    mapBasemapPath_ = path;
+    QSettings settings;
+    settings.setValue("ui/mapBasemapPath", path);
+    emit mapSettingsChanged();
 }
 
 void AppController::refreshAutoAtmosphere() {

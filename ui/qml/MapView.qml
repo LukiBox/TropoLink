@@ -20,6 +20,13 @@ Item {
         mapView.grabToImage(function (result) { callback(result.image) })
     }
 
+    // Paper sheet under the tiles: areas without DEM coverage read as blank map
+    // paper instead of holes.
+    Rectangle {
+        anchors.fill: parent
+        color: Theme.dark ? "#23262b" : "#f4f1e7"
+    }
+
     TileMapItem {
         id: tiles
         anchors.fill: parent
@@ -28,6 +35,8 @@ Item {
         centerLat: 51.97
         centerLon: 15.27
         zoom: 8.0
+        basemapPath: mapView.appCtl.mapBasemapPath
+        onlineSource: mapView.appCtl.mapOnlineSource
     }
 
     MapOverlayItem {
@@ -212,6 +221,12 @@ Item {
             text: qsTr("Load basemap (MBTiles)...")
             onTriggered: basemapDialog.open()
         }
+        MenuItem {
+            visible: !controller.airgap
+            height: visible ? implicitHeight : 0
+            text: qsTr("Download offline maps...")
+            onTriggered: mapView.openDownloadDialog()
+        }
     }
 
     FileDialog {
@@ -227,7 +242,33 @@ Item {
         title: qsTr("Open MBTiles basemap")
         fileMode: FileDialog.OpenFile
         nameFilters: [qsTr("MBTiles (*.mbtiles)")]
-        onAccepted: tiles.basemapPath = selectedFile.toString().replace("file:///", "")
+        onAccepted: mapView.appCtl.mapBasemapPath =
+                        selectedFile.toString().replace("file:///", "")
+    }
+
+    MapDownloadDialog {
+        id: downloadDialog
+        parent: mapView
+    }
+
+    function openDownloadDialog() {
+        const tl = tiles.toCoordinate(Qt.point(0, 0))
+        const br = tiles.toCoordinate(Qt.point(mapView.width, mapView.height))
+        downloadDialog.viewBbox = { minLat: Math.min(tl.lat, br.lat),
+                                    maxLat: Math.max(tl.lat, br.lat),
+                                    minLon: Math.min(tl.lon, br.lon),
+                                    maxLon: Math.max(tl.lon, br.lon) }
+        const c = mapView.appCtl
+        // ~25 km corridor around the path bbox.
+        const dLat = 0.25
+        const dLon = 0.25 / Math.max(0.2, Math.cos(
+            (c.siteALat + c.siteBLat) / 2 * Math.PI / 180))
+        downloadDialog.pathBbox = {
+            minLat: Math.min(c.siteALat, c.siteBLat) - dLat,
+            maxLat: Math.max(c.siteALat, c.siteBLat) + dLat,
+            minLon: Math.min(c.siteALon, c.siteBLon) - dLon,
+            maxLon: Math.max(c.siteALon, c.siteBLon) + dLon }
+        downloadDialog.open()
     }
 
     // --- search box (accepts any coordinate format) --------------------------
@@ -331,6 +372,130 @@ Item {
                 }
             }
         }
+
+        // Basemap selector: offline terrain rendering / online sources.
+        Rectangle {
+            width: sourceLabel.width + 26
+            height: 28
+            color: Theme.panel
+            opacity: 0.95
+            border.color: Theme.border
+            Text {
+                id: sourceLabel
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 8
+                text: {
+                    if (tiles.hasBasemap) return qsTr("Basemap: pack")
+                    if (tiles.onlineSource === "opentopomap") return "OpenTopoMap"
+                    if (tiles.onlineSource === "osm") return "OSM"
+                    return qsTr("Terrain (offline)")
+                }
+                color: Theme.text
+                font.pixelSize: Theme.fontSizeSmall
+            }
+            Text {
+                anchors.right: parent.right
+                anchors.rightMargin: 6
+                anchors.verticalCenter: parent.verticalCenter
+                text: "▾"
+                color: Theme.textDim
+                font.pixelSize: 9
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: sourceMenu.popup()
+            }
+            Menu {
+                id: sourceMenu
+                MenuItem {
+                    text: qsTr("Terrain rendering (offline)")
+                    onTriggered: {
+                        mapView.appCtl.mapBasemapPath = ""
+                        mapView.appCtl.mapOnlineSource = ""
+                    }
+                }
+                MenuItem {
+                    visible: !mapView.appCtl.airgap
+                    height: visible ? implicitHeight : 0
+                    text: qsTr("OpenTopoMap (online, cached)")
+                    onTriggered: {
+                        mapView.appCtl.mapBasemapPath = ""
+                        mapView.appCtl.mapOnlineSource = "opentopomap"
+                    }
+                }
+                MenuItem {
+                    visible: !mapView.appCtl.airgap
+                    height: visible ? implicitHeight : 0
+                    text: qsTr("OpenStreetMap (online, cached)")
+                    onTriggered: {
+                        mapView.appCtl.mapBasemapPath = ""
+                        mapView.appCtl.mapOnlineSource = "osm"
+                    }
+                }
+                MenuSeparator {}
+                MenuItem {
+                    text: qsTr("Load basemap (MBTiles)...")
+                    onTriggered: basemapDialog.open()
+                }
+                MenuItem {
+                    visible: tiles.hasBasemap
+                    height: visible ? implicitHeight : 0
+                    text: qsTr("Unload basemap pack")
+                    onTriggered: mapView.appCtl.mapBasemapPath = ""
+                }
+                MenuItem {
+                    visible: !mapView.appCtl.airgap
+                    height: visible ? implicitHeight : 0
+                    text: qsTr("Download offline maps...")
+                    onTriggered: mapView.openDownloadDialog()
+                }
+            }
+        }
+
+        Rectangle {
+            visible: !mapView.appCtl.airgap
+            width: dlLabel.width + 16
+            height: 28
+            color: Theme.panel
+            opacity: 0.95
+            border.color: Theme.border
+            Text {
+                id: dlLabel
+                anchors.centerIn: parent
+                text: qsTr("Download maps")
+                color: Theme.textDim
+                font.pixelSize: Theme.fontSizeSmall
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: mapView.openDownloadDialog()
+            }
+        }
+
+        Rectangle {
+            width: 28
+            height: 28
+            color: Theme.panel
+            opacity: 0.95
+            border.color: Theme.border
+            HelpButton {
+                anchors.centerIn: parent
+                topic: "map"
+            }
+        }
+    }
+
+    // Source attribution (license requirement for OSM/OpenTopoMap layers).
+    Text {
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottomMargin: 2
+        text: tiles.attribution
+        color: Theme.textDim
+        font.pixelSize: 9
+        style: Text.Outline
+        styleColor: Theme.dark ? "#000000" : "#ffffff"
     }
 
     // --- scale bar + north arrow ---------------------------------------------

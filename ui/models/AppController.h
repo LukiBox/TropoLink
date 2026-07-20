@@ -20,6 +20,7 @@
 #include <QObject>
 #include <QPointF>
 #include <QPolygonF>
+#include <QThreadPool>
 #include <QTimer>
 #include <QUrl>
 #include <QVariantList>
@@ -28,6 +29,7 @@
 #include <atomic>
 #include <memory>
 #include <optional>
+#include <stop_token>
 
 // Immutable result snapshot handed from the worker to the UI thread.
 struct ComputeOutcome {
@@ -111,6 +113,9 @@ class AppController : public QObject {
     Q_PROPERTY(bool downloading READ downloading NOTIFY downloadingChanged)
     Q_PROPERTY(QStringList antennaPresets READ antennaPresets CONSTANT)
     Q_PROPERTY(QStringList radioPresets READ radioPresets CONSTANT)
+    // Persisted map-source choice ("": offline terrain rendering).
+    Q_PROPERTY(QString mapOnlineSource READ mapOnlineSource WRITE setMapOnlineSource NOTIFY mapSettingsChanged)
+    Q_PROPERTY(QString mapBasemapPath READ mapBasemapPath WRITE setMapBasemapPath NOTIFY mapSettingsChanged)
 
 public:
     explicit AppController(QObject* parent = nullptr);
@@ -233,6 +238,13 @@ public:
     Q_INVOKABLE bool generateReport(const QUrl& url, const QImage& mapSnapshot);
     Q_INVOKABLE QString lastReportHash() const { return lastReportHash_; }
     Q_INVOKABLE QString provenance(const QString& key) const; // formula/source on hover
+    // Detailed in-app help (PL/EN follows languageCode).
+    Q_INVOKABLE QVariantList helpTopics() const;
+    Q_INVOKABLE QString helpHtml(const QString& topic) const;
+    QString mapOnlineSource() const { return mapOnlineSource_; }
+    void setMapOnlineSource(const QString& id);
+    QString mapBasemapPath() const { return mapBasemapPath_; }
+    void setMapBasemapPath(const QString& path);
     Q_INVOKABLE void downloadSrtmForRegion(double minLat, double maxLat, double minLon, double maxLon);
     QStringList antennaPresets() const;
     QStringList radioPresets() const;
@@ -258,6 +270,7 @@ signals:
     void statusMessageChanged();
     void reportGenerated(const QString& path);
     void downloadingChanged();
+    void mapSettingsChanged();
 
 private:
     struct LinkState {
@@ -276,7 +289,7 @@ private:
     };
 
     void scheduleRecompute(bool immediate);
-    void runComputation(quint64 revision, LinkState state);
+    void runComputation(quint64 revision, LinkState state, std::stop_token stopToken);
     void deliverOutcome(std::shared_ptr<ComputeOutcome> outcome);
     void refreshAutoAtmosphere();
     void applyProject(const tl::project::Project& project);
@@ -295,6 +308,11 @@ private:
     QTimer debounce_;
     bool busy_ = false;
     std::shared_ptr<ComputeOutcome> outcome_;
+    // Computations run serialized on their own single-thread pool (extraction is
+    // internally parallel already); a new revision stop-requests the running one so
+    // dragging a pin over a long path cannot pile up unbounded work.
+    QThreadPool computePool_;
+    std::stop_source computeStop_;
 
     // published results
     QVariantMap geometry_;
@@ -321,6 +339,8 @@ private:
     bool profileHasVoids_ = false;
     QString languageCode_ = QStringLiteral("pl");
     bool darkTheme_ = true;
+    QString mapOnlineSource_;
+    QString mapBasemapPath_;
     QString statusMessage_;
     QString lastReportHash_;
     QString projectName_ = QStringLiteral("Untitled");

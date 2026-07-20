@@ -57,6 +57,7 @@ ScrollView {
 
         PanelSection {
             title: qsTr("Geometry")
+            helpTopic: "profile"
             property var g: controller.geometry
             KV { k: qsTr("Distance");      v: (controller.geometry.distanceKm ?? 0).toFixed(3) + " km"; provKey: "distance" }
             KV { k: qsTr("Azimuth A→B");   v: (controller.geometry.azimuthAB ?? 0).toFixed(2) + "°"; provKey: "azimuth" }
@@ -81,6 +82,7 @@ ScrollView {
 
         PanelSection {
             title: qsTr("Model comparison")
+            helpTopic: "models"
             ColumnLayout {
                 Layout.fillWidth: true
                 spacing: 2
@@ -185,6 +187,7 @@ ScrollView {
 
         PanelSection {
             title: qsTr("Link budget")
+            helpTopic: "budget"
             WaterfallChart {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 190
@@ -203,6 +206,7 @@ ScrollView {
 
         PanelSection {
             title: qsTr("Availability")
+            helpTopic: "availability"
             RowLayout {
                 Layout.fillWidth: true
                 Text {

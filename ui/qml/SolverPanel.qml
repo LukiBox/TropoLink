@@ -6,6 +6,7 @@ import QtQuick.Layouts
 PanelSection {
     id: solver
     title: qsTr("Design solver")
+    helpTopic: "solver"
     property var result: null
 
     NumberField {

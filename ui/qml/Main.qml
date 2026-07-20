@@ -189,6 +189,7 @@ ApplicationWindow {
                     label: Theme.dark ? qsTr("Dark") : qsTr("Light")
                     onClicked: toolbar.toggleTheme()
                 }
+                ToolButton2 { label: qsTr("Help"); onClicked: helpDialog.openTopic("overview") }
                 ToolButton2 { label: "?"; onClicked: tour.open() }
             }
         }
@@ -261,4 +262,12 @@ ApplicationWindow {
     }
 
     OnboardingTour { id: tour }
+
+    HelpDialog { id: helpDialog }
+
+    // HelpButtons anywhere in the UI route here through the Theme singleton.
+    Connections {
+        target: Theme
+        function onOpenHelp(topic) { helpDialog.openTopic(topic) }
+    }
 }
