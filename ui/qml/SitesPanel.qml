@@ -37,13 +37,26 @@ ScrollView {
                         font.pixelSize: Theme.fontSizeSmall
                         verticalAlignment: TextInput.AlignVCenter
                         selectByMouse: true
-                        text: {
-                            const f = controller.coordinateFormats(siteSection.lat, siteSection.lon)
-                            return f.dd
-                        }
+                        // 'text' must not be bound directly: typing into a TextInput
+                        // breaks the binding for good, after which the field would
+                        // never follow the model again (dragging the pin, loading a
+                        // project). Track the canonical string separately and push it
+                        // in unless the operator has uncommitted edits sitting in the
+                        // field — merely having the caret here must not freeze it.
+                        property string canonical:
+                            controller.coordinateFormats(siteSection.lat, siteSection.lon).dd
+                        property bool edited: false
+                        onTextEdited: edited = true
+                        onCanonicalChanged: if (!edited) text = canonical
+                        Component.onCompleted: text = canonical
+                        onActiveFocusChanged: if (!activeFocus) { edited = false; text = canonical }
                         onAccepted: {
-                            if (!controller.parseCoordinateToSite(siteSection.siteIndex, text))
-                                text = controller.coordinateFormats(siteSection.lat, siteSection.lon).dd
+                            controller.parseCoordinateToSite(siteSection.siteIndex, text)
+                            // Accepted: show the canonical form of whatever the site is
+                            // now. Rejected: the site is unchanged, so this restores it
+                            // and the status bar carries the parse error.
+                            edited = false
+                            text = canonical
                         }
                     }
                 }
