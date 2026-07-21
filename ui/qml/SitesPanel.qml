@@ -10,6 +10,8 @@ ScrollView {
     clip: true
     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
+    AutoDesignDialog { id: autoDesignDialog }
+
     ColumnLayout {
         width: panel.availableWidth
         spacing: 6
@@ -102,6 +104,51 @@ ScrollView {
         PanelSection {
             title: qsTr("Radio")
             helpTopic: "radio"
+
+            // Auto-design: fill every radio field from the path geometry.
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.preferredHeight: 30
+                radius: 3
+                color: autoArea.pressed ? Qt.darker(Theme.accent, 1.15)
+                       : autoArea.containsMouse ? Theme.accent : Qt.alpha(Theme.accent, 0.85)
+                Row {
+                    anchors.centerIn: parent
+                    spacing: 6
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "⚙"
+                        color: "#101010"
+                        font.pixelSize: Theme.fontSize + 2
+                    }
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: qsTr("Auto-design radio from geometry")
+                        color: "#101010"
+                        font.pixelSize: Theme.fontSizeSmall
+                        font.bold: true
+                    }
+                }
+                MouseArea {
+                    id: autoArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        const r = controller.autoDesignRadio()
+                        autoDesignDialog.showResult(r)
+                    }
+                }
+            }
+            Text {
+                Layout.fillWidth: true
+                text: qsTr("Solves the whole radio (band, dish, gain, power, modulation) "
+                           + "for the target availability at the current data rate.")
+                color: Theme.textDim
+                font.pixelSize: Theme.fontSizeSmall
+                wrapMode: Text.Wrap
+            }
+
             RowLayout {
                 Layout.fillWidth: true
                 Text {

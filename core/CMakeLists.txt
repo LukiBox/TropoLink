@@ -20,6 +20,7 @@ add_library(tropolink_core STATIC
     budget/link_budget.cpp
     budget/availability.cpp
     budget/solver.cpp
+    budget/auto_design.cpp
     project/project.cpp
     project/kml_export.cpp
     project/csv_export.cpp

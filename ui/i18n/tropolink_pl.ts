@@ -9,95 +9,198 @@
         <translation>Nierozpoznana moc: %1</translation>
     </message>
     <message>
-        <location filename="../models/AppController.cpp" line="381"/>
+        <location filename="../models/AppController.cpp" line="388"/>
         <source>Unrecognized coordinate: %1</source>
         <translation>Nierozpoznane współrzędne: %1</translation>
     </message>
     <message>
-        <location filename="../models/AppController.cpp" line="413"/>
+        <location filename="../models/AppController.cpp" line="420"/>
         <source>%1 km  az %2°</source>
         <translation>%1 km  az %2°</translation>
     </message>
     <message>
-        <location filename="../models/AppController.cpp" line="433"/>
+        <location filename="../models/AppController.cpp" line="440"/>
         <source>Imported %1 terrain file(s)</source>
         <translation>Zaimportowano plików terenu: %1</translation>
     </message>
     <message>
-        <location filename="../models/AppController.cpp" line="768"/>
+        <location filename="../models/AppController.cpp" line="775"/>
         <source>No valid primary model</source>
         <translation>Brak ważnego modelu głównego</translation>
     </message>
     <message>
-        <location filename="../models/AppController.cpp" line="815"/>
+        <location filename="../models/AppController.cpp" line="807"/>
+        <source>No path to design for yet — place both sites first.</source>
+        <translation>Brak trasy do zaprojektowania — najpierw ustaw oba stanowiska.</translation>
+    </message>
+    <message>
+        <location filename="../models/AppController.cpp" line="837"/>
+        <source>Band chosen by sweeping every troposcatter allocation: for a fixed dish, higher frequency buys more antenna gain than it costs in path loss, until absorption and coupling take over.</source>
+        <translation>Pasmo wybrane przez przeszukanie wszystkich przydziałów troposferycznych: dla danej anteny wyższa częstotliwość daje więcej zysku, niż kosztuje w stracie trasy — do momentu, gdy przeważą absorpcja i strata sprzężenia.</translation>
+    </message>
+    <message>
+        <location filename="../models/AppController.cpp" line="841"/>
+        <source>Smallest reflector that still meets the target — a larger one is heavier and, past the coupling optimum, actually worse.</source>
+        <translation>Najmniejsza czasza, która wciąż spełnia cel — większa jest cięższa, a powyżej optimum sprzężenia wręcz gorsza.</translation>
+    </message>
+    <message>
+        <location filename="../models/AppController.cpp" line="844"/>
+        <source>Follows from the reflector size at the chosen frequency (G = η(πDf/c)², 55% aperture efficiency).</source>
+        <translation>Wynika z rozmiaru czaszy przy wybranej częstotliwości (G = η(πDf/c)², sprawność apertury 55%).</translation>
+    </message>
+    <message>
+        <location filename="../models/AppController.cpp" line="847"/>
+        <source>Lowest power that meets the availability target with 3 dB design headroom — less power means less prime power, less heat and a smaller signature.</source>
+        <translation>Najmniejsza moc spełniająca cel dostępności z zapasem projektowym 3 dB — mniejsza moc to mniejsze zasilanie, mniej ciepła i mniejsza sygnatura.</translation>
+    </message>
+    <message>
+        <location filename="../models/AppController.cpp" line="850"/>
+        <source>Needs the least transmit power at this data rate once its wider or narrower occupied bandwidth is accounted for in the noise floor.</source>
+        <translation>Wymaga najmniejszej mocy nadajnika przy tej przepływności, gdy uwzględnić jej szersze lub węższe pasmo zajęte w progu szumów.</translation>
+    </message>
+    <message>
+        <location filename="../models/AppController.cpp" line="863"/>
+        <source>This path is outside the validity range of ITU-R P.617-5, so there is no defensible configuration to propose.</source>
+        <translation>Ta trasa jest poza zakresem ważności ITU-R P.617-5, więc nie ma uzasadnionej konfiguracji do zaproponowania.</translation>
+    </message>
+    <message>
+        <location filename="../models/AppController.cpp" line="900"/>
+        <source>Configuration applied.</source>
+        <translation>Konfiguracja zastosowana.</translation>
+    </message>
+    <message>
+        <location filename="../models/AppController.cpp" line="901"/>
+        <source>No configuration within the equipment limits reaches the target; the closest one was applied. Relax the availability target, add diversity, raise the antennas or shorten the path.</source>
+        <translation>Żadna konfiguracja w granicach sprzętu nie osiąga celu; zastosowano najbliższą. Złagodź cel dostępności, dodaj dywersyfikację, podnieś anteny lub skróć trasę.</translation>
+    </message>
+    <message>
+        <location filename="../models/AppController.cpp" line="928"/>
         <source>KML exported</source>
         <translation>Wyeksportowano KML</translation>
     </message>
     <message>
-        <location filename="../models/AppController.cpp" line="825"/>
+        <location filename="../models/AppController.cpp" line="938"/>
         <source>Profile CSV exported</source>
         <translation>Wyeksportowano CSV profilu</translation>
     </message>
     <message>
-        <location filename="../models/AppController.cpp" line="835"/>
+        <location filename="../models/AppController.cpp" line="948"/>
         <source>Budget CSV exported</source>
         <translation>Wyeksportowano CSV bilansu</translation>
     </message>
     <message>
-        <location filename="../models/AppController.cpp" line="892"/>
+        <location filename="../models/AppController.cpp" line="1005"/>
         <source>Project saved</source>
         <translation>Projekt zapisany</translation>
     </message>
     <message>
-        <location filename="../models/AppController.cpp" line="933"/>
+        <location filename="../models/AppController.cpp" line="1046"/>
         <source>Project loaded</source>
         <translation>Projekt wczytany</translation>
     </message>
     <message>
-        <location filename="../models/AppController.cpp" line="941"/>
+        <location filename="../models/AppController.cpp" line="1054"/>
         <source>No results to report</source>
         <translation>Brak wyników do raportu</translation>
     </message>
     <message>
-        <location filename="../models/AppController.cpp" line="944"/>
+        <location filename="../models/AppController.cpp" line="1057"/>
         <source>Generating report...</source>
         <translation>Generowanie raportu...</translation>
     </message>
     <message>
-        <location filename="../models/AppController.cpp" line="995"/>
+        <location filename="../models/AppController.cpp" line="1108"/>
         <source>Report written: %1</source>
         <translation>Raport zapisany: %1</translation>
     </message>
     <message>
-        <location filename="../models/AppController.cpp" line="1193"/>
+        <location filename="../models/AppController.cpp" line="1306"/>
         <source>Region covers %1 tiles; limit is 24</source>
         <translation>Obszar obejmuje %1 kafli; limit to 24</translation>
     </message>
     <message>
-        <location filename="../models/AppController.cpp" line="1206"/>
+        <location filename="../models/AppController.cpp" line="1319"/>
         <source>SRTM download finished: %1 tile(s) imported</source>
         <translation>Pobieranie SRTM zakończone: zaimportowano kafli: %1</translation>
     </message>
     <message>
-        <location filename="../models/AppController.cpp" line="1217"/>
+        <location filename="../models/AppController.cpp" line="1330"/>
         <source>Downloading %1 (%2/%3)...</source>
         <translation>Pobieranie %1 (%2/%3)...</translation>
     </message>
     <message>
-        <location filename="../models/AppController.cpp" line="1239"/>
+        <location filename="../models/AppController.cpp" line="1352"/>
         <source>Tile %1 failed verification</source>
         <translation>Kafel %1 nie przeszedł weryfikacji</translation>
     </message>
     <message>
-        <location filename="../models/AppController.cpp" line="1251"/>
+        <location filename="../models/AppController.cpp" line="1364"/>
         <source>Downloader is not present in the Air-Gap build</source>
         <translation>Moduł pobierania nie istnieje w wersji Air-Gap</translation>
     </message>
 </context>
 <context>
+    <name>AutoDesignDialog</name>
+    <message>
+        <location filename="../qml/AutoDesignDialog.qml" line="35"/>
+        <source>Auto-design result</source>
+        <translation>Wynik auto-doboru</translation>
+    </message>
+    <message>
+        <location filename="../qml/AutoDesignDialog.qml" line="59"/>
+        <source>Meets the target: %1 % annual availability, %2 dB fade margin.</source>
+        <translation>Spełnia cel: %1 % dostępności rocznej, %2 dB marginesu zaniku.</translation>
+    </message>
+    <message>
+        <location filename="../qml/AutoDesignDialog.qml" line="88"/>
+        <source>Frequency</source>
+        <translation type="unfinished">Częstotliwość</translation>
+    </message>
+    <message>
+        <location filename="../qml/AutoDesignDialog.qml" line="89"/>
+        <source>Antenna diameter</source>
+        <translation type="unfinished">Średnica anteny</translation>
+    </message>
+    <message>
+        <location filename="../qml/AutoDesignDialog.qml" line="90"/>
+        <source>Antenna gain</source>
+        <translation>Zysk anteny</translation>
+    </message>
+    <message>
+        <location filename="../qml/AutoDesignDialog.qml" line="91"/>
+        <source>TX power</source>
+        <translation type="unfinished">Moc nadajnika</translation>
+    </message>
+    <message>
+        <location filename="../qml/AutoDesignDialog.qml" line="92"/>
+        <source>Modulation</source>
+        <translation type="unfinished">Modulacja</translation>
+    </message>
+    <message>
+        <location filename="../qml/AutoDesignDialog.qml" line="133"/>
+        <source>Nothing to change — the current radio is already the best configuration for this path.</source>
+        <translation>Nic do zmiany — bieżące radio jest już najlepszą konfiguracją dla tej trasy.</translation>
+    </message>
+    <message>
+        <location filename="../qml/AutoDesignDialog.qml" line="148"/>
+        <source>A %1 m dish was rejected: at these gains the aperture-to-medium coupling loss (%2 dB) grows faster than the gain, so it would need %3 dB more transmit power, not less.</source>
+        <translation>Odrzucono czaszę %1 m: przy tych zyskach strata sprzężenia apertura–ośrodek (%2 dB) rośnie szybciej niż zysk, więc wymagałaby o %3 dB większej mocy nadajnika, nie mniejszej.</translation>
+    </message>
+    <message>
+        <location filename="../qml/AutoDesignDialog.qml" line="168"/>
+        <source>Values are applied; every field remains editable.</source>
+        <translation>Wartości zastosowano; każde pole pozostaje edytowalne.</translation>
+    </message>
+    <message>
+        <location filename="../qml/AutoDesignDialog.qml" line="174"/>
+        <source>Close</source>
+        <translation type="unfinished">Zamknij</translation>
+    </message>
+</context>
+<context>
     <name>HelpDialog</name>
     <message>
-        <location filename="../qml/HelpDialog.qml" line="39"/>
+        <location filename="../qml/HelpDialog.qml" line="43"/>
         <source>TropoLink Help</source>
         <translation>Pomoc TropoLink</translation>
     </message>
@@ -199,67 +302,67 @@
 <context>
     <name>MapDownloadDialog</name>
     <message>
-        <location filename="../qml/MapDownloadDialog.qml" line="40"/>
+        <location filename="../qml/MapDownloadDialog.qml" line="42"/>
         <source>Download offline maps</source>
         <translation>Pobierz mapy offline</translation>
     </message>
     <message>
-        <location filename="../qml/MapDownloadDialog.qml" line="70"/>
+        <location filename="../qml/MapDownloadDialog.qml" line="72"/>
         <source>Area</source>
         <translation>Obszar</translation>
     </message>
     <message>
-        <location filename="../qml/MapDownloadDialog.qml" line="74"/>
+        <location filename="../qml/MapDownloadDialog.qml" line="76"/>
         <source>Current map view</source>
         <translation>Bieżący widok mapy</translation>
     </message>
     <message>
-        <location filename="../qml/MapDownloadDialog.qml" line="74"/>
+        <location filename="../qml/MapDownloadDialog.qml" line="76"/>
         <source>Corridor along the A–B path</source>
         <translation>Korytarz wzdłuż trasy A–B</translation>
     </message>
     <message>
-        <location filename="../qml/MapDownloadDialog.qml" line="78"/>
+        <location filename="../qml/MapDownloadDialog.qml" line="80"/>
         <source>Source</source>
         <translation>Źródło</translation>
     </message>
     <message>
-        <location filename="../qml/MapDownloadDialog.qml" line="82"/>
+        <location filename="../qml/MapDownloadDialog.qml" line="84"/>
         <source>OpenTopoMap (topographic, contours)</source>
         <translation>OpenTopoMap (topograficzna, poziomice)</translation>
     </message>
     <message>
-        <location filename="../qml/MapDownloadDialog.qml" line="82"/>
+        <location filename="../qml/MapDownloadDialog.qml" line="84"/>
         <source>OpenStreetMap (general)</source>
         <translation>OpenStreetMap (ogólna)</translation>
     </message>
     <message>
-        <location filename="../qml/MapDownloadDialog.qml" line="86"/>
+        <location filename="../qml/MapDownloadDialog.qml" line="88"/>
         <source>Zoom levels (coarse → detailed)</source>
         <translation>Poziomy powiększenia (zgrubne → szczegółowe)</translation>
     </message>
     <message>
-        <location filename="../qml/MapDownloadDialog.qml" line="110"/>
+        <location filename="../qml/MapDownloadDialog.qml" line="112"/>
         <source>Estimate: %1 tiles — over the 30,000 limit, reduce area or zoom</source>
         <translation>Szacunek: %1 kafelków — powyżej limitu 30 000, zmniejsz obszar lub zakres powiększenia</translation>
     </message>
     <message>
-        <location filename="../qml/MapDownloadDialog.qml" line="112"/>
+        <location filename="../qml/MapDownloadDialog.qml" line="114"/>
         <source>Estimate: %1 tiles, ~%2 MB</source>
         <translation>Szacunek: %1 kafelków, ~%2 MB</translation>
     </message>
     <message>
-        <location filename="../qml/MapDownloadDialog.qml" line="142"/>
+        <location filename="../qml/MapDownloadDialog.qml" line="144"/>
         <source>Cancel</source>
         <translation>Anuluj</translation>
     </message>
     <message>
-        <location filename="../qml/MapDownloadDialog.qml" line="142"/>
+        <location filename="../qml/MapDownloadDialog.qml" line="144"/>
         <source>Start download</source>
         <translation>Rozpocznij pobieranie</translation>
     </message>
     <message>
-        <location filename="../qml/MapDownloadDialog.qml" line="160"/>
+        <location filename="../qml/MapDownloadDialog.qml" line="162"/>
         <source>Close</source>
         <translation>Zamknij</translation>
     </message>
@@ -346,13 +449,13 @@
     </message>
     <message>
         <location filename="../qml/MapView.qml" line="221"/>
-        <location filename="../qml/MapView.qml" line="438"/>
+        <location filename="../qml/MapView.qml" line="447"/>
         <source>Load basemap (MBTiles)...</source>
         <translation>Wczytaj mapę podkładową (MBTiles)...</translation>
     </message>
     <message>
         <location filename="../qml/MapView.qml" line="227"/>
-        <location filename="../qml/MapView.qml" line="450"/>
+        <location filename="../qml/MapView.qml" line="459"/>
         <source>Download offline maps...</source>
         <translation>Pobierz mapy offline...</translation>
     </message>
@@ -382,57 +485,57 @@
         <translation>MBTiles (*.mbtiles)</translation>
     </message>
     <message>
-        <location filename="../qml/MapView.qml" line="293"/>
+        <location filename="../qml/MapView.qml" line="292"/>
         <source>Search: 51.5N 15.3E / 33UXT... / 51°30&apos;N...</source>
         <translation>Szukaj: 51.5N 15.3E / 33UXT... / 51°30&apos;N...</translation>
     </message>
     <message>
-        <location filename="../qml/MapView.qml" line="317"/>
+        <location filename="../qml/MapView.qml" line="316"/>
         <source>Unrecognized coordinate</source>
         <translation>Nierozpoznane współrzędne</translation>
     </message>
     <message>
-        <location filename="../qml/MapView.qml" line="337"/>
+        <location filename="../qml/MapView.qml" line="336"/>
         <source>MGRS grid</source>
         <translation>Siatka MGRS</translation>
     </message>
     <message>
-        <location filename="../qml/MapView.qml" line="359"/>
+        <location filename="../qml/MapView.qml" line="358"/>
         <source>Measure</source>
         <translation>Pomiar</translation>
     </message>
     <message>
-        <location filename="../qml/MapView.qml" line="389"/>
+        <location filename="../qml/MapView.qml" line="398"/>
         <source>Basemap: pack</source>
         <translation>Podkład: pakiet</translation>
     </message>
     <message>
-        <location filename="../qml/MapView.qml" line="392"/>
+        <location filename="../qml/MapView.qml" line="401"/>
         <source>Terrain (offline)</source>
         <translation>Teren (offline)</translation>
     </message>
     <message>
-        <location filename="../qml/MapView.qml" line="412"/>
+        <location filename="../qml/MapView.qml" line="421"/>
         <source>Terrain rendering (offline)</source>
         <translation>Rysunek terenu (offline)</translation>
     </message>
     <message>
-        <location filename="../qml/MapView.qml" line="421"/>
+        <location filename="../qml/MapView.qml" line="430"/>
         <source>OpenTopoMap (online, cached)</source>
         <translation>OpenTopoMap (online, buforowana)</translation>
     </message>
     <message>
-        <location filename="../qml/MapView.qml" line="430"/>
+        <location filename="../qml/MapView.qml" line="439"/>
         <source>OpenStreetMap (online, cached)</source>
         <translation>OpenStreetMap (online, buforowana)</translation>
     </message>
     <message>
-        <location filename="../qml/MapView.qml" line="444"/>
+        <location filename="../qml/MapView.qml" line="453"/>
         <source>Unload basemap pack</source>
         <translation>Odłącz pakiet podkładu</translation>
     </message>
     <message>
-        <location filename="../qml/MapView.qml" line="466"/>
+        <location filename="../qml/MapView.qml" line="475"/>
         <source>Download maps</source>
         <translation>Pobierz mapy</translation>
     </message>
@@ -719,137 +822,147 @@
 <context>
     <name>SitesPanel</name>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="61"/>
+        <location filename="../qml/SitesPanel.qml" line="76"/>
         <source>Antenna height</source>
         <translation>Wysokość anteny</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="73"/>
+        <location filename="../qml/SitesPanel.qml" line="88"/>
         <source>Site A</source>
         <translation>Stanowisko A</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="81"/>
+        <location filename="../qml/SitesPanel.qml" line="96"/>
         <source>Site B</source>
         <translation>Stanowisko B</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="90"/>
+        <location filename="../qml/SitesPanel.qml" line="105"/>
         <source>Radio</source>
         <translation>Radio</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="95"/>
+        <location filename="../qml/SitesPanel.qml" line="126"/>
+        <source>Auto-design radio from geometry</source>
+        <translation>Auto-dobór radia z geometrii</translation>
+    </message>
+    <message>
+        <location filename="../qml/SitesPanel.qml" line="145"/>
+        <source>Solves the whole radio (band, dish, gain, power, modulation) for the target availability at the current data rate.</source>
+        <translation>Dobiera całe radio (pasmo, antena, zysk, moc, modulacja) do docelowej dostępności przy bieżącej przepływności.</translation>
+    </message>
+    <message>
+        <location filename="../qml/SitesPanel.qml" line="155"/>
         <source>Antenna preset</source>
         <translation>Antena (biblioteka)</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="111"/>
+        <location filename="../qml/SitesPanel.qml" line="171"/>
         <source>Radio preset</source>
         <translation>Radio (biblioteka)</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="125"/>
+        <location filename="../qml/SitesPanel.qml" line="185"/>
         <source>Frequency</source>
         <translation>Częstotliwość</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="136"/>
+        <location filename="../qml/SitesPanel.qml" line="196"/>
         <source>TX power</source>
         <translation>Moc nadajnika</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="167"/>
+        <location filename="../qml/SitesPanel.qml" line="227"/>
         <source>Antenna gain A</source>
         <translation>Zysk anteny A</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="174"/>
+        <location filename="../qml/SitesPanel.qml" line="234"/>
         <source>Antenna gain B</source>
         <translation>Zysk anteny B</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="181"/>
+        <location filename="../qml/SitesPanel.qml" line="241"/>
         <source>Antenna diameter</source>
         <translation>Średnica anteny</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="185"/>
+        <location filename="../qml/SitesPanel.qml" line="245"/>
         <source>Used by the diversity separation calculator</source>
         <translation>Używane przez kalkulator odstępów dywersyfikacji</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="189"/>
+        <location filename="../qml/SitesPanel.qml" line="249"/>
         <source>Line loss A</source>
         <translation>Straty toru A</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="196"/>
+        <location filename="../qml/SitesPanel.qml" line="256"/>
         <source>Line loss B</source>
         <translation>Straty toru B</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="203"/>
+        <location filename="../qml/SitesPanel.qml" line="263"/>
         <source>Noise figure</source>
         <translation>Współczynnik szumów</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="212"/>
+        <location filename="../qml/SitesPanel.qml" line="272"/>
         <source>Modulation</source>
         <translation>Modulacja</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="227"/>
+        <location filename="../qml/SitesPanel.qml" line="287"/>
         <source>Data rate</source>
         <translation>Przepływność</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="236"/>
+        <location filename="../qml/SitesPanel.qml" line="296"/>
         <source>Atmosphere &amp; climate</source>
         <translation>Atmosfera i klimat</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="241"/>
+        <location filename="../qml/SitesPanel.qml" line="301"/>
         <source>k-factor</source>
         <translation>Współczynnik k</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="249"/>
+        <location filename="../qml/SitesPanel.qml" line="309"/>
         <source>auto</source>
         <translation>auto</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="256"/>
+        <location filename="../qml/SitesPanel.qml" line="316"/>
         <source>k value</source>
         <translation>wartość k</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="262"/>
+        <location filename="../qml/SitesPanel.qml" line="322"/>
         <source>k = 157/(157 - dN); sub-refractive k &lt; 1 supported</source>
         <translation>k = 157/(157 − dN); obsługiwane k &lt; 1 (subrefrakcja)</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="267"/>
+        <location filename="../qml/SitesPanel.qml" line="327"/>
         <source>N0 = %1   dN = %2 N/km  (ITU maps)</source>
         <translation>N0 = %1   dN = %2 N/km  (mapy ITU)</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="277"/>
+        <location filename="../qml/SitesPanel.qml" line="337"/>
         <source>Climate</source>
         <translation>Klimat</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="294"/>
+        <location filename="../qml/SitesPanel.qml" line="354"/>
         <source>Terrain store</source>
         <translation>Magazyn terenu</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="304"/>
+        <location filename="../qml/SitesPanel.qml" line="364"/>
         <source>downloaded</source>
         <translation>pobrane</translation>
     </message>
     <message>
-        <location filename="../qml/SitesPanel.qml" line="323"/>
+        <location filename="../qml/SitesPanel.qml" line="383"/>
         <source>No terrain data. Drag &amp; drop DTED/HGT/GeoTIFF onto the window.</source>
         <translation>Brak danych terenu. Przeciągnij pliki DTED/HGT/GeoTIFF na okno.</translation>
     </message>
@@ -910,49 +1023,54 @@
 <context>
     <name>StatusBar</name>
     <message>
-        <location filename="../qml/StatusBar.qml" line="17"/>
+        <location filename="../qml/StatusBar.qml" line="18"/>
         <source>TERRAIN OK</source>
         <translation>TEREN OK</translation>
     </message>
     <message>
-        <location filename="../qml/StatusBar.qml" line="17"/>
+        <location filename="../qml/StatusBar.qml" line="18"/>
         <source>NO TERRAIN</source>
         <translation>BRAK TERENU</translation>
     </message>
     <message>
-        <location filename="../qml/StatusBar.qml" line="23"/>
+        <location filename="../qml/StatusBar.qml" line="24"/>
         <source>P.617-5</source>
         <translation>P.617-5</translation>
     </message>
     <message>
-        <location filename="../qml/StatusBar.qml" line="23"/>
+        <location filename="../qml/StatusBar.qml" line="24"/>
         <source>TN101</source>
         <translation>TN101</translation>
     </message>
     <message>
-        <location filename="../qml/StatusBar.qml" line="23"/>
+        <location filename="../qml/StatusBar.qml" line="24"/>
         <source>ITM</source>
         <translation>ITM</translation>
     </message>
     <message>
-        <location filename="../qml/StatusBar.qml" line="24"/>
+        <location filename="../qml/StatusBar.qml" line="25"/>
         <source>primary</source>
         <translation>główny</translation>
     </message>
     <message>
-        <location filename="../qml/StatusBar.qml" line="29"/>
+        <location filename="../qml/StatusBar.qml" line="30"/>
         <source>compute %1 ms</source>
         <translation>obliczenia %1 ms</translation>
     </message>
     <message>
-        <location filename="../qml/StatusBar.qml" line="36"/>
+        <location filename="../qml/StatusBar.qml" line="37"/>
         <source>computing…</source>
         <translation>obliczanie…</translation>
     </message>
     <message>
-        <location filename="../qml/StatusBar.qml" line="49"/>
+        <location filename="../qml/StatusBar.qml" line="50"/>
         <source>AIR-GAP</source>
         <translation>AIR-GAP</translation>
+    </message>
+    <message>
+        <location filename="../qml/StatusBar.qml" line="59"/>
+        <source>Made by LukiBox</source>
+        <translation>Autor: LukiBox</translation>
     </message>
 </context>
 <context>

@@ -44,6 +44,7 @@ qt_add_qml_module(tropolink_ui
         qml/HelpButton.qml
         qml/HelpDialog.qml
         qml/MapDownloadDialog.qml
+        qml/AutoDesignDialog.qml
 )
 
 target_include_directories(tropolink_ui PUBLIC ${CMAKE_SOURCE_DIR})

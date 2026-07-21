@@ -8,6 +8,7 @@
 // invocation, tagged with a revision — stale results are dropped. Dragging a pin
 // streams debounced recomputes at interactive rate.
 
+#include "core/budget/auto_design.h"
 #include "core/budget/availability.h"
 #include "core/budget/link_budget.h"
 #include "core/budget/solver.h"
@@ -231,6 +232,9 @@ public:
     Q_INVOKABLE void removeTerrainEntry(const QString& fileName);
     Q_INVOKABLE void recompute(bool immediate = false);
     Q_INVOKABLE QVariantMap solveFor(int what); // 0 power, 1 gain, 2 rate
+    // Auto-design: derive the whole radio configuration from the path geometry and
+    // apply it. Returns a summary {ok, note, changes:[{field,from,to,reason}], ...}.
+    Q_INVOKABLE QVariantMap autoDesignRadio();
     Q_INVOKABLE QVariantList availabilityCurve(bool worstMonth) const;
     Q_INVOKABLE bool exportKml(const QUrl& url);
     Q_INVOKABLE bool exportProfileCsv(const QUrl& url);

@@ -801,6 +801,112 @@ QVariantMap AppController::solveFor(int what) {
     return out;
 }
 
+QVariantMap AppController::autoDesignRadio() {
+    QVariantMap out{{"ok", false}};
+    if (!outcome_ || outcome_->profile.points.empty()) {
+        out["note"] = tr("No path to design for yet — place both sites first.");
+        return out;
+    }
+    const auto& profile = outcome_->profile;
+    const auto& suite = outcome_->suite;
+
+    budget::AutoDesignGeometry geometry;
+    geometry.pathLength = suite.inverse.distance;
+    geometry.takeoffA = suite.horizons.takeoffAngleA;
+    geometry.takeoffB = suite.horizons.takeoffAngleB;
+    geometry.terrainAvailable = profile.hasCoverage;
+    geometry.surfaceHeightAmsl = profile.hasCoverage ? profile.meanElevation() : Meters(0.0);
+    geometry.antennaAmslA = Meters(profile.points.front().elevation.value() + link_.aglA.value());
+    geometry.antennaAmslB = Meters(profile.points.back().elevation.value() + link_.aglB.value());
+
+    budget::AutoDesignConstraints constraints;
+    constraints.targetAvailability = link_.targetAvailability;
+    constraints.worstMonth = link_.targetIsWorstMonth;
+    constraints.diversity = link_.diversity;
+    constraints.dataRate = link_.radio.dataRate;
+    constraints.lineLossA = link_.radio.lineLossA;
+    constraints.lineLossB = link_.radio.lineLossB;
+    constraints.noiseFigure = link_.radio.noiseFigure;
+
+    const auto result = budget::autoDesign(geometry, link_.atmosphere, modulations_, link_.radio,
+                                           link_.frequency, link_.antennaDiameter, constraints);
+
+    // Stable reason keys -> operator-facing, translatable text.
+    static const QHash<QString, QString> reasons = {
+        {"reason_frequency",
+         tr("Band chosen by sweeping every troposcatter allocation: for a fixed dish, "
+            "higher frequency buys more antenna gain than it costs in path loss, until "
+            "absorption and coupling take over.")},
+        {"reason_diameter",
+         tr("Smallest reflector that still meets the target — a larger one is heavier "
+            "and, past the coupling optimum, actually worse.")},
+        // Split escapes: "\x80D" would otherwise be read as one over-long hex escape.
+        {"reason_gain", tr("Follows from the reflector size at the chosen frequency "
+                           "(G = \xCE\xB7(\xCF\x80" "Df/c)\xC2\xB2, 55% aperture efficiency).")},
+        {"reason_txpower",
+         tr("Lowest power that meets the availability target with 3 dB design headroom "
+            "— less power means less prime power, less heat and a smaller signature.")},
+        {"reason_modulation",
+         tr("Needs the least transmit power at this data rate once its wider or "
+            "narrower occupied bandwidth is accounted for in the noise floor.")},
+    };
+
+    QVariantList changes;
+    for (const auto& c : result.changes) {
+        changes << QVariantMap{{"field", QString::fromStdString(c.field)},
+                               {"from", QString::fromStdString(c.oldValue)},
+                               {"to", QString::fromStdString(c.newValue)},
+                               {"reason", reasons.value(QString::fromStdString(c.reasonKey))}};
+    }
+
+    if (result.noteKey == "auto_no_model") {
+        out["note"] = tr("This path is outside the validity range of ITU-R P.617-5, so "
+                         "there is no defensible configuration to propose.");
+        out["changes"] = changes;
+        return out;
+    }
+
+    // Apply the design.
+    link_.frequency = result.frequency;
+    link_.antennaDiameter = result.antennaDiameter;
+    link_.radio.antennaGainA = result.antennaGain;
+    link_.radio.antennaGainB = result.antennaGain;
+    link_.radio.txPower = result.txPower;
+    txPowerText_ = QStringLiteral("%1 dBm").arg(result.txPower.value(), 0, 'f', 1);
+    if (result.modulationIndex >= 0 &&
+        result.modulationIndex < static_cast<int>(modulations_.entries().size())) {
+        modulationIndex_ = result.modulationIndex;
+        link_.radio.modulation =
+            modulations_.entries()[static_cast<std::size_t>(result.modulationIndex)];
+    }
+
+    out["ok"] = result.feasible;
+    out["changes"] = changes;
+    out["feasible"] = result.feasible;
+    out["frequencyGHz"] = result.frequency.gigahertz();
+    out["diameterM"] = result.antennaDiameter.value();
+    out["gainDbi"] = result.antennaGain.value();
+    out["txDbm"] = result.txPower.value();
+    out["txWatts"] = result.txPower.watts();
+    out["marginDb"] = result.fadeMargin.value();
+    out["availabilityAnnual"] = result.availabilityAnnual.value();
+    out["availabilityWorstMonth"] = result.availabilityWorstMonth.value();
+    out["couplingDb"] = result.couplingLoss.value();
+    if (result.rejectedLargerDiameter.value() > 0.0) {
+        out["rejectedDiameterM"] = result.rejectedLargerDiameter.value();
+        out["rejectedPenaltyDb"] = result.rejectedLargerPenaltyDb.value();
+    }
+    out["note"] = result.feasible
+                      ? tr("Configuration applied.")
+                      : tr("No configuration within the equipment limits reaches the target; "
+                           "the closest one was applied. Relax the availability target, add "
+                           "diversity, raise the antennas or shorten the path.");
+
+    emit radioChanged();
+    scheduleRecompute(true);
+    return out;
+}
+
 QVariantList AppController::availabilityCurve(bool worstMonth) const {
     QVariantList list;
     if (!outcome_ || !outcome_->engine) {

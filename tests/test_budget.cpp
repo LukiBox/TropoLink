@@ -1,3 +1,4 @@
+#include "core/budget/auto_design.h"
 #include "core/budget/availability.h"
 #include "core/budget/link_budget.h"
 #include "core/budget/solver.h"
@@ -44,6 +45,119 @@ tropo::P617Model referenceModel() {
 }
 
 } // namespace
+
+TEST(AutoDesign, ApertureGainMatchesTextbookDish) {
+    // 3 m dish at 4.4 GHz, 55% efficiency: G = 10 log10(0.55 (pi D f / c)^2).
+    // lambda = 0.06813 m -> pi*3/0.06813 = 138.3 -> 0.55*138.3^2 = 10523 -> 40.2 dBi.
+    const Dbi g = apertureGain(3.0_m, 4.4_GHz, 0.55);
+    EXPECT_NEAR(g.value(), 40.2, 0.2);
+    // Doubling the diameter is +6 dB; doubling the frequency is +6 dB.
+    EXPECT_NEAR(apertureGain(6.0_m, 4.4_GHz, 0.55).value() - g.value(), 6.02, 0.05);
+    EXPECT_NEAR(apertureGain(3.0_m, 8.8_GHz, 0.55).value() - g.value(), 6.02, 0.05);
+}
+
+TEST(AutoDesign, RespectsApertureToMediumCouplingOptimum) {
+    // The whole point of searching rather than assuming "bigger dish is better":
+    // coupling loss Lc = 0.07 exp[0.055 (Gt + Gr)] eventually eats the extra gain.
+    // Past the optimum, adding gain must stop improving the net link.
+    tropo::P617Params p;
+    p.frequency = 4.4_GHz;
+    p.pathLength = 103.5_km;
+    p.takeoffA = Radians(0.003);
+    p.takeoffB = Radians(0.003);
+    p.seaLevelN0 = 320.0;
+    p.lapseRateDn = 40.0;
+    p.kFactor = 4.0 / 3.0;
+    p.surfaceHeightAmsl = 150.0_m;
+    p.antennaAmslA = 154.0_m;
+    p.antennaAmslB = 154.0_m;
+
+    auto netGainDb = [&](double gainDbi) {
+        p.gainA = Dbi(gainDbi);
+        p.gainB = Dbi(gainDbi);
+        const tropo::P617Model model(p);
+        // Net benefit of the antennas: both gains minus the loss they cause.
+        return 2.0 * gainDbi - model.medianLoss().value();
+    };
+
+    // Rising while gain is cheap...
+    EXPECT_GT(netGainDb(45.0), netGainDb(35.0));
+    // ...and past the optimum (~50 dBi per end) more gain is counter-productive.
+    EXPECT_LT(netGainDb(60.0), netGainDb(50.0));
+}
+
+TEST(AutoDesign, ProducesAFeasibleDesignAndExplainsIt) {
+    AutoDesignGeometry g;
+    g.pathLength = 103.5_km;
+    g.takeoffA = Radians(0.003);
+    g.takeoffB = Radians(0.003);
+    g.surfaceHeightAmsl = 150.0_m;
+    g.antennaAmslA = 154.0_m;
+    g.antennaAmslB = 154.0_m;
+    g.terrainAvailable = true;
+
+    geo::Atmosphere atm;
+    atm.seaLevelN0 = 320.0;
+    atm.lapseRateDn = 40.0;
+    atm.kFactor = 4.0 / 3.0;
+
+    AutoDesignConstraints c;
+    c.targetAvailability = Percent(99.9);
+    c.diversity = DiversityMode::Quad;
+    c.dataRate = BitsPerSecond::fromMegabits(2.0);
+
+    const auto lib = ModulationLibrary::builtIn();
+    const auto result =
+        autoDesign(g, atm, lib, referenceRadio(), 4.4_GHz, 3.0_m, c);
+
+    ASSERT_TRUE(result.feasible);
+    EXPECT_EQ(result.noteKey, "auto_ok");
+    // Stays inside equipment limits and the P.617 validity envelope.
+    EXPECT_LE(result.txPower.value(), c.maxTxPower.value());
+    EXPECT_LE(result.antennaDiameter.value(), c.maxAntennaDiameter.value());
+    EXPECT_GE(result.frequency.gigahertz(), 0.2);
+    EXPECT_LE(result.frequency.gigahertz(), 5.0);
+    // It must actually reach the target it was asked for.
+    EXPECT_GE(result.availabilityAnnual.value(), c.targetAvailability.value());
+    // And it must be able to say what it changed.
+    EXPECT_FALSE(result.changes.empty());
+    for (const auto& ch : result.changes) {
+        EXPECT_FALSE(ch.field.empty());
+        EXPECT_FALSE(ch.reasonKey.empty());
+        EXPECT_NE(ch.oldValue, ch.newValue);
+    }
+}
+
+TEST(AutoDesign, HarderPathDemandsMoreThanAnEasyOne) {
+    auto design = [](double pathKm, Percent target) {
+        AutoDesignGeometry g;
+        g.pathLength = Meters(pathKm * 1000.0);
+        g.takeoffA = Radians(0.003);
+        g.takeoffB = Radians(0.003);
+        g.surfaceHeightAmsl = 150.0_m;
+        g.antennaAmslA = 154.0_m;
+        g.antennaAmslB = 154.0_m;
+        g.terrainAvailable = true;
+        geo::Atmosphere atm;
+        atm.seaLevelN0 = 320.0;
+        atm.lapseRateDn = 40.0;
+        atm.kFactor = 4.0 / 3.0;
+        AutoDesignConstraints c;
+        c.targetAvailability = target;
+        c.diversity = DiversityMode::Quad;
+        c.dataRate = BitsPerSecond::fromMegabits(2.0);
+        return autoDesign(g, atm, ModulationLibrary::builtIn(), referenceRadio(), 4.4_GHz, 3.0_m, c);
+    };
+    // A longer path, or a stricter availability target, cannot be cheaper to equip.
+    const auto easy = design(150.0, Percent(99.0));
+    const auto longer = design(400.0, Percent(99.0));
+    const auto stricter = design(150.0, Percent(99.99));
+    const auto burden = [](const AutoDesignResult& r) {
+        return r.txPower.value() + 20.0 * std::log10(r.antennaDiameter.value());
+    };
+    EXPECT_GE(burden(longer), burden(easy));
+    EXPECT_GE(burden(stricter), burden(easy));
+}
 
 TEST(Budget, WaterfallSumsExactly) {
     const auto radio = referenceRadio();
