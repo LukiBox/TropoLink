@@ -37,11 +37,9 @@ SuiteResult runSuite(const SuiteInput& input, const terrain::Profile& profile, M
 
     // Geographic position of the common volume and its height above local terrain.
     const auto samples = geo::Geodesy::sampleLine(input.siteA, input.siteB, 3);
-    const double frac = out.geometry.distanceToVolumeA.value() /
-                        std::max(1.0, out.inverse.distance.value());
-    out.commonVolumePosition =
-        geo::Geodesy::direct(input.siteA, out.inverse.forwardAzimuth,
-                             Meters(out.inverse.distance.value() * frac));
+    const double frac = out.geometry.distanceToVolumeA.value() / std::max(1.0, out.inverse.distance.value());
+    out.commonVolumePosition = geo::Geodesy::direct(input.siteA, out.inverse.forwardAzimuth,
+                                                    Meters(out.inverse.distance.value() * frac));
     out.commonVolumeAboveTerrain =
         out.geometry.volumeBaseAmsl - profile.elevationAt(out.geometry.distanceToVolumeA);
 

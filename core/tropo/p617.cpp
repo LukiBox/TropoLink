@@ -36,8 +36,7 @@ P617Model::P617Model(const P617Params& params) : params_(params) {
     if (!params.terrainAvailable) {
         validity_.issues.push_back("no terrain data: horizon angles are smooth-earth estimates");
     }
-    validity_.valid = validity_.issues.empty() ||
-                      (validity_.issues.size() == 1 && !params.terrainAvailable);
+    validity_.valid = validity_.issues.empty() || (validity_.issues.size() == 1 && !params.terrainAvailable);
 
     // eq. (3): aperture-to-medium coupling loss.
     couplingLoss_ = Decibels(0.07 * std::exp(0.055 * (params.gainA.value() + params.gainB.value())));
@@ -56,8 +55,7 @@ P617Model::P617Model(const P617Params& params) : params_(params) {
     const double tauT = params.takeoffA.value();
     const double tauR = params.takeoffB.value();
     if (theta > 1e-6) {
-        const double xStar = std::clamp(
-            (hR - hT + tauR * dKm + dKm * dKm / (2.0 * kaKm)) / theta, 0.0, dKm);
+        const double xStar = std::clamp((hR - hT + tauR * dKm + dKm * dKm / (2.0 * kaKm)) / theta, 0.0, dKm);
         h0Km_ = hT + tauT * xStar + xStar * xStar / (2.0 * kaKm);
     } else {
         h0Km_ = hT;

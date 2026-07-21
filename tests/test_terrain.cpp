@@ -43,8 +43,7 @@ std::string writeSyntheticDem(const std::string& name, double minLat, double max
             const double lon = minLon + (x + 0.5) * pixLon;
             row[static_cast<std::size_t>(x)] = static_cast<float>(elevation(lat, lon));
         }
-        (void)ds->GetRasterBand(1)->RasterIO(GF_Write, 0, y, size, 1, row.data(), size, 1, GDT_Float32, 0,
-                                             0);
+        (void)ds->GetRasterBand(1)->RasterIO(GF_Write, 0, y, size, 1, row.data(), size, 1, GDT_Float32, 0, 0);
     }
     GDALClose(ds);
     return path.string();
@@ -68,10 +67,9 @@ Profile syntheticProfile(int n, double stepM, const std::function<double(double)
 
 TEST(Terrain, PlaneDemProfileMatchesAnalytic) {
     // Plane: h = 100 + 1000*(lat - 51) + 500*(lon - 15)  [degrees -> metres]
-    const auto path = writeSyntheticDem("plane.tif", 51.0, 52.0, 15.0, 16.0, 400,
-                                        [](double lat, double lon) {
-                                            return 100.0 + 1000.0 * (lat - 51.0) + 500.0 * (lon - 15.0);
-                                        });
+    const auto path = writeSyntheticDem("plane.tif", 51.0, 52.0, 15.0, 16.0, 400, [](double lat, double lon) {
+        return 100.0 + 1000.0 * (lat - 51.0) + 500.0 * (lon - 15.0);
+    });
     const auto storeDir = (testDir() / "store_plane").string();
     auto store = TerrainStore::open(storeDir);
     ASSERT_TRUE(store.hasValue());
@@ -94,14 +92,13 @@ TEST(Terrain, PlaneDemProfileMatchesAnalytic) {
 
 TEST(Terrain, VoidsAreInterpolatedAndFlagged) {
     // A DEM with a NODATA hole in the middle band.
-    const auto path = writeSyntheticDem("voids.tif", 51.0, 52.0, 15.0, 16.0, 200,
-                                        [](double lat, double lon) -> double {
-                                            if (lon > 15.45 && lon < 15.55) {
-                                                return -32767.0; // void
-                                            }
-                                            return 200.0 + 100.0 * std::sin(lat * 3.0) +
-                                                   100.0 * std::cos(lon * 2.0);
-                                        });
+    const auto path =
+        writeSyntheticDem("voids.tif", 51.0, 52.0, 15.0, 16.0, 200, [](double lat, double lon) -> double {
+            if (lon > 15.45 && lon < 15.55) {
+                return -32767.0; // void
+            }
+            return 200.0 + 100.0 * std::sin(lat * 3.0) + 100.0 * std::cos(lon * 2.0);
+        });
     const auto storeDir = (testDir() / "store_voids").string();
     auto store = TerrainStore::open(storeDir);
     ASSERT_TRUE(store.hasValue());

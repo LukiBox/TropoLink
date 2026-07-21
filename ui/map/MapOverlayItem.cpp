@@ -11,8 +11,12 @@
 #include <cmath>
 
 namespace {
-QColor accent(bool dark) { return dark ? QColor(255, 170, 60) : QColor(200, 90, 0); }
-QColor gridColor(bool dark) { return dark ? QColor(120, 160, 200, 110) : QColor(60, 90, 140, 110); }
+QColor accent(bool dark) {
+    return dark ? QColor(255, 170, 60) : QColor(200, 90, 0);
+}
+QColor gridColor(bool dark) {
+    return dark ? QColor(120, 160, 200, 110) : QColor(60, 90, 140, 110);
+}
 } // namespace
 
 MapOverlayItem::MapOverlayItem(QQuickItem* parent) : QQuickPaintedItem(parent) {

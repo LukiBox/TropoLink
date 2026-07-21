@@ -18,12 +18,12 @@ namespace tl::tropo {
 
 struct ScatterGeometryInput {
     Meters pathLength{0.0};
-    Radians takeoffA{0.0};        // horizon angle from site A (radians, may be negative)
+    Radians takeoffA{0.0}; // horizon angle from site A (radians, may be negative)
     Radians takeoffB{0.0};
-    Meters antennaAmslA{0.0};     // antenna centre height above sea level
+    Meters antennaAmslA{0.0}; // antenna centre height above sea level
     Meters antennaAmslB{0.0};
     double kFactor = 4.0 / 3.0;
-    Dbi gainA{0.0};               // used for the beamwidth-limited top of the volume
+    Dbi gainA{0.0}; // used for the beamwidth-limited top of the volume
     Dbi gainB{0.0};
 };
 
@@ -32,10 +32,10 @@ struct ScatterGeometry {
     Radians angularDistance{0.0};  // d/(ka) term alone
     Meters distanceToVolumeA{0.0}; // along-path distance from A to the volume centre
     Meters distanceToVolumeB{0.0};
-    Meters slantRangeA{0.0};       // slant distance antenna -> common volume
+    Meters slantRangeA{0.0}; // slant distance antenna -> common volume
     Meters slantRangeB{0.0};
-    Meters volumeBaseAmsl{0.0};    // crossover of the two horizon rays
-    Meters volumeTopAmsl{0.0};     // crossover of the two upper half-power beam edges
+    Meters volumeBaseAmsl{0.0}; // crossover of the two horizon rays
+    Meters volumeTopAmsl{0.0};  // crossover of the two upper half-power beam edges
     Meters verticalExtent{0.0};
     Radians antennaElevationA{0.0}; // pointing elevation towards the volume (== takeoff)
     Radians antennaElevationB{0.0};

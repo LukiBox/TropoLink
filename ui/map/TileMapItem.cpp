@@ -2,9 +2,9 @@
 
 #include "ui/models/AppController.h"
 
+#include <QQuickWindow>
 #include <QSGSimpleTextureNode>
 #include <QSGTexture>
-#include <QQuickWindow>
 #include <QtMath>
 
 #include <cmath>
@@ -12,7 +12,9 @@
 namespace {
 constexpr double kTileSize = 256.0;
 
-double lonToWorldX(double lon) { return (lon + 180.0) / 360.0; }
+double lonToWorldX(double lon) {
+    return (lon + 180.0) / 360.0;
+}
 double latToWorldY(double lat) {
     const double rad = lat * M_PI / 180.0;
     return (1.0 - std::asinh(std::tan(rad)) / M_PI) / 2.0;
@@ -30,7 +32,7 @@ quint64 texKey(int layer, const TileKey& k) {
 // (and therefore them) whenever the item or the window goes away — correct
 // lifetime with no manual cross-thread cleanup.
 class TileCacheNode : public QSGNode {
-public:
+  public:
     ~TileCacheNode() override { qDeleteAll(textures); }
     QHash<quint64, QSGTexture*> textures;
     QSet<quint64> usedThisFrame;
@@ -192,8 +194,7 @@ void TileMapItem::zoomAround(QPointF pivot, double zoomDelta) {
     zoom_ = std::clamp(zoom_ + zoomDelta, kMinZoom, kMaxZoom);
     const auto after = toCoordinate(pivot);
     centerLat_ = std::clamp(centerLat_ + before["lat"].toDouble() - after["lat"].toDouble(), -85.0, 85.0);
-    centerLon_ =
-        std::clamp(centerLon_ + before["lon"].toDouble() - after["lon"].toDouble(), -180.0, 180.0);
+    centerLon_ = std::clamp(centerLon_ + before["lon"].toDouble() - after["lon"].toDouble(), -180.0, 180.0);
     emit viewChanged();
     update();
 }
@@ -282,8 +283,7 @@ QSGNode* TileMapItem::updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData*) {
                         const int ox = (key.x & ((1 << dz) - 1)) * sub;
                         const int oy = (key.y & ((1 << dz) - 1)) * sub;
                         image = parentImage.copy(ox, oy, sub, sub)
-                                    .scaled(256, 256, Qt::IgnoreAspectRatio,
-                                            Qt::SmoothTransformation);
+                                    .scaled(256, 256, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
                         return 0;
                     }
                 }

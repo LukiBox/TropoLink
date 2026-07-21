@@ -31,7 +31,7 @@ class TileMapItem : public QQuickItem {
     Q_PROPERTY(QString attribution READ attribution NOTIFY basemapChanged)
     QML_ELEMENT
 
-public:
+  public:
     explicit TileMapItem(QQuickItem* parent = nullptr);
 
     double centerLat() const { return centerLat_; }
@@ -59,16 +59,16 @@ public:
     Q_INVOKABLE void centerOn(double lat, double lon, double zoomLevel = -1.0);
     Q_INVOKABLE double metersPerPixel() const;
 
-signals:
+  signals:
     void viewChanged();
     void controllerChanged();
     void basemapChanged();
 
-protected:
+  protected:
     QSGNode* updatePaintNode(QSGNode* node, UpdatePaintNodeData* data) override;
     void geometryChange(const QRectF& newGeometry, const QRectF& oldGeometry) override;
 
-private:
+  private:
     static constexpr double kMinZoom = 3.0;
     static constexpr double kMaxZoom = 17.0;
 

@@ -20,8 +20,8 @@
 namespace tl::terrain {
 
 struct ProfilePoint {
-    Meters distance{0.0};    // along-path distance from site A
-    Meters elevation{0.0};   // terrain elevation AMSL
+    Meters distance{0.0};          // along-path distance from site A
+    Meters elevation{0.0};         // terrain elevation AMSL
     bool interpolatedVoid = false; // true where the DEM had a void and we interpolated
     geo::GeoPoint position;
 };

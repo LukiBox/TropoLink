@@ -16,9 +16,9 @@ struct GeoPoint {
 };
 
 struct InverseResult {
-    Meters distance;           // geodesic distance s12
-    Degrees forwardAzimuth;    // azimuth at point 1, clockwise from true north
-    Degrees reverseAzimuth;    // azimuth of the path *back* from point 2 towards point 1
+    Meters distance;        // geodesic distance s12
+    Degrees forwardAzimuth; // azimuth at point 1, clockwise from true north
+    Degrees reverseAzimuth; // azimuth of the path *back* from point 2 towards point 1
 };
 
 struct PathSample {
@@ -27,7 +27,7 @@ struct PathSample {
 };
 
 class Geodesy {
-public:
+  public:
     // Great-ellipse inverse problem: distance and both azimuths.
     [[nodiscard]] static InverseResult inverse(const GeoPoint& a, const GeoPoint& b);
 

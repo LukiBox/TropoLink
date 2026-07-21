@@ -28,7 +28,7 @@ struct Modulation {
 };
 
 class ModulationLibrary {
-public:
+  public:
     // Built-in defaults (BPSK, QPSK, 8PSK, 16QAM, 64QAM).
     [[nodiscard]] static ModulationLibrary builtIn();
     // Load from JSON; falls back to built-in entries on error.
@@ -37,7 +37,7 @@ public:
     [[nodiscard]] const std::vector<Modulation>& entries() const { return entries_; }
     [[nodiscard]] const Modulation* find(const std::string& name) const;
 
-private:
+  private:
     std::vector<Modulation> entries_;
 };
 

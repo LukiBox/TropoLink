@@ -1,7 +1,7 @@
 ﻿#include "ui/report/PdfReport.h"
 
-#include <gdal.h>
 #include <GeographicLib/Constants.hpp>
+#include <gdal.h>
 
 #include <QDateTime>
 #include <QFont>
@@ -44,10 +44,10 @@ struct Cursor {
         QFont f = pdfFont(10.0);
         p->setFont(f);
         p->setPen(QColor(120, 120, 120));
-        p->drawText(QRectF(kMargin, kPageH - 44, kPageW - 2 * kMargin, 20),
-                    Qt::AlignLeft | Qt::AlignVCenter, footerLeft);
-        p->drawText(QRectF(kMargin, kPageH - 44, kPageW - 2 * kMargin, 20),
-                    Qt::AlignRight | Qt::AlignVCenter, QStringLiteral("%1").arg(page));
+        p->drawText(QRectF(kMargin, kPageH - 44, kPageW - 2 * kMargin, 20), Qt::AlignLeft | Qt::AlignVCenter,
+                    footerLeft);
+        p->drawText(QRectF(kMargin, kPageH - 44, kPageW - 2 * kMargin, 20), Qt::AlignRight | Qt::AlignVCenter,
+                    QStringLiteral("%1").arg(page));
     }
 
     void newPage() {
@@ -69,8 +69,7 @@ void drawParagraph(Cursor& c, const QString& text, double pointSize = 9.0, bool 
     c.p->setFont(f);
     c.p->setPen(QColor(20, 20, 20));
     const double w = kPageW - 2 * kMargin;
-    const QRectF bound =
-        c.p->boundingRect(QRectF(kMargin, 0, w, 10000), Qt::TextWordWrap, text);
+    const QRectF bound = c.p->boundingRect(QRectF(kMargin, 0, w, 10000), Qt::TextWordWrap, text);
     c.need(bound.height() + 8);
     c.p->drawText(QRectF(kMargin, c.y, w, bound.height() + 4), Qt::TextWordWrap, text);
     c.y += bound.height() + 8;
@@ -81,8 +80,7 @@ void drawHeading(Cursor& c, const QString& text) {
     QFont f = pdfFont(17.0, true);
     c.p->setFont(f);
     c.p->setPen(QColor(20, 40, 70));
-    c.p->drawText(QRectF(kMargin, c.y, kPageW - 2 * kMargin, 26), Qt::AlignLeft | Qt::AlignVCenter,
-                  text);
+    c.p->drawText(QRectF(kMargin, c.y, kPageW - 2 * kMargin, 26), Qt::AlignLeft | Qt::AlignVCenter, text);
     c.y += 28;
     c.p->setPen(QPen(QColor(20, 40, 70), 1.2));
     c.p->drawLine(QPointF(kMargin, c.y), QPointF(kPageW - kMargin, c.y));
@@ -165,8 +163,8 @@ void drawProfileFigure(Cursor& c, const ReportRenderInputs& in, const QString& c
 
     const double d = in.profileMeta.value("distanceM").toDouble();
     const double minY = in.profileMeta.value("minY").toDouble();
-    const double maxY = std::max(in.profileMeta.value("maxY").toDouble(),
-                                 in.profileMeta.value("lensTopY").toDouble());
+    const double maxY =
+        std::max(in.profileMeta.value("maxY").toDouble(), in.profileMeta.value("lensTopY").toDouble());
     const double span = std::max(50.0, maxY - minY);
     const double yLo = minY - span * 0.06;
     const double yHi = maxY + span * 0.10;
@@ -226,9 +224,9 @@ void drawProfileFigure(Cursor& c, const ReportRenderInputs& in, const QString& c
     QFont small = pdfFont(10.0);
     c.p->setFont(small);
     c.p->setPen(QColor(20, 20, 20));
-    c.p->drawText(QPointF(X(lensX) + 6, Y(lensBaseY) - 4),
-                  QStringLiteral("\xCE\xB8 = %1 mrad")
-                      .arg(in.profileMeta.value("thetaMrad").toDouble(), 0, 'f', 2));
+    c.p->drawText(
+        QPointF(X(lensX) + 6, Y(lensBaseY) - 4),
+        QStringLiteral("\xCE\xB8 = %1 mrad").arg(in.profileMeta.value("thetaMrad").toDouble(), 0, 'f', 2));
     c.p->restore();
     c.p->setPen(QPen(QColor(150, 150, 150), 0.8));
     c.p->drawRect(rect);
@@ -342,10 +340,10 @@ ReportRenderResult renderPdfReport(const ReportRenderInputs& in, const QString& 
     painter.drawText(QRectF(kMargin, 60, kPageW - 2 * kMargin, 46), Qt::AlignLeft,
                      QString::fromStdString(content.title));
     painter.setFont(pdfFont(15.0));
-    painter.drawText(QRectF(kMargin, 120, kPageW - 2 * kMargin, 30), Qt::AlignLeft,
-                     QStringLiteral("%1  /  %2")
-                         .arg(QString::fromStdString(content.projectName),
-                              QString::fromStdString(content.linkName)));
+    painter.drawText(
+        QRectF(kMargin, 120, kPageW - 2 * kMargin, 30), Qt::AlignLeft,
+        QStringLiteral("%1  /  %2")
+            .arg(QString::fromStdString(content.projectName), QString::fromStdString(content.linkName)));
     painter.drawText(QRectF(kMargin, 152, kPageW - 2 * kMargin, 26), Qt::AlignLeft,
                      QString::fromStdString(content.generatedStamp));
 

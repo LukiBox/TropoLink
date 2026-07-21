@@ -15,10 +15,8 @@ Decibels Modulation::requiredSnr() const {
 ModulationLibrary ModulationLibrary::builtIn() {
     ModulationLibrary lib;
     lib.entries_ = {
-        {"BPSK", 1.0, Decibels(10.5), 0.35},
-        {"QPSK", 2.0, Decibels(10.5), 0.35},
-        {"8PSK", 3.0, Decibels(14.0), 0.35},
-        {"16QAM", 4.0, Decibels(14.4), 0.35},
+        {"BPSK", 1.0, Decibels(10.5), 0.35},  {"QPSK", 2.0, Decibels(10.5), 0.35},
+        {"8PSK", 3.0, Decibels(14.0), 0.35},  {"16QAM", 4.0, Decibels(14.4), 0.35},
         {"64QAM", 6.0, Decibels(18.8), 0.35},
     };
     return lib;

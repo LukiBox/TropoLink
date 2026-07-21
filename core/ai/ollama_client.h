@@ -12,7 +12,7 @@
 namespace tl::ai {
 
 struct OllamaRequest {
-    int port = 11434;                 // loopback port only; host is always 127.0.0.1
+    int port = 11434; // loopback port only; host is always 127.0.0.1
     std::string model = "llama3.2";
     std::string prompt;
     int timeoutSeconds = 60;

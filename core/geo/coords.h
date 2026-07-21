@@ -14,7 +14,7 @@ namespace tl::geo {
 enum class CoordFormat { DecimalDegrees, Dms, Mgrs, Utm };
 
 class Coords {
-public:
+  public:
     // Accepts, among others:
     //   "51.50609699N, 15.33150851E"   "51.506097, 15.331509"   "-33.86 151.21"
     //   "51°30'21.9\"N 15°19'53.4\"E"  "51 30 21.9 N, 15 19 53.4 E"  "51d30m21.9sN ..."

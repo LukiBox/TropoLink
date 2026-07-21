@@ -45,7 +45,7 @@ inline size_t qHash(const TileKey& k, size_t seed = 0) {
 
 class MBTilesSource : public QObject {
     Q_OBJECT
-public:
+  public:
     explicit MBTilesSource(QObject* parent = nullptr);
     ~MBTilesSource() override;
 
@@ -60,10 +60,10 @@ public:
     // marks "pack has no such tile" so callers can fall through to another layer.
     QImage tile(const TileKey& key);
 
-signals:
+  signals:
     void tileReady();
 
-private:
+  private:
     sqlite3* db_ = nullptr;
     QString path_;
     QCache<TileKey, QImage> cache_{48 * 1024 * 1024}; // cost = bytes
@@ -77,17 +77,17 @@ private:
 // Paper-topographic renderer over the terrain store.
 class TopoTileSource : public QObject {
     Q_OBJECT
-public:
+  public:
     explicit TopoTileSource(tl::terrain::TerrainStore* store, QObject* parent = nullptr);
     ~TopoTileSource() override;
 
     QImage tile(const TileKey& key, bool darkTheme);
     void invalidate(); // terrain store changed
 
-signals:
+  signals:
     void tileReady();
 
-private:
+  private:
     tl::terrain::TerrainStore* store_;
     QCache<TileKey, QImage> cache_{96 * 1024 * 1024}; // cost = bytes
     QSet<TileKey> pending_;
@@ -101,9 +101,8 @@ private:
 // network fetch is compiled out; only previously cached tiles are served.
 class HttpTileSource : public QObject {
     Q_OBJECT
-public:
-    HttpTileSource(const QString& id, const QString& urlTemplate, int maxZoom,
-                   QObject* parent = nullptr);
+  public:
+    HttpTileSource(const QString& id, const QString& urlTemplate, int maxZoom, QObject* parent = nullptr);
     ~HttpTileSource() override;
 
     [[nodiscard]] int maxZoom() const { return maxZoom_; }
@@ -112,10 +111,10 @@ public:
 
     QImage tile(const TileKey& key);
 
-signals:
+  signals:
     void tileReady();
 
-private:
+  private:
     void pump(); // start queued fetches, max kConcurrent in flight
 
     QString id_;
@@ -123,7 +122,7 @@ private:
     QString cacheDir_;
     int maxZoom_ = 17;
     QCache<TileKey, QImage> cache_{48 * 1024 * 1024}; // cost = bytes
-    QSet<TileKey> pending_;   // being loaded (disk or network)
+    QSet<TileKey> pending_;                           // being loaded (disk or network)
     QQueue<TileKey> fetchQueue_;
     int inFlight_ = 0;
     QNetworkAccessManager* nam_ = nullptr; // created lazily, standard flavor only

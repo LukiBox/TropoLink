@@ -45,8 +45,8 @@ ItmModel::ItmModel(const terrain::Profile& profile, const ItmParams& params) : p
         long warnings = 0;
         IntermediateValues iv{};
         const int rc = ITM_P2P_TLS_Ex(hA, hB, pfl_.data(), params.climate, params.seaLevelN0, fMhz,
-                                      params.polarization, params.groundEpsilon, params.groundSigma, 13,
-                                      50.0, 50.0, 50.0, &a, &warnings, &iv);
+                                      params.polarization, params.groundEpsilon, params.groundSigma, 13, 50.0,
+                                      50.0, 50.0, &a, &warnings, &iv);
         if (rc != SUCCESS && rc != SUCCESS_WITH_WARNINGS) {
             validity_.issues.push_back("ITM rejected the inputs (code " + std::to_string(rc) + ")");
         } else {
@@ -64,8 +64,7 @@ ItmModel::ItmModel(const terrain::Profile& profile, const ItmParams& params) : p
             }
         }
     }
-    validity_.valid = validity_.issues.empty() ||
-                      (validity_.issues.size() == 1 && mode_ == "diffraction");
+    validity_.valid = validity_.issues.empty() || (validity_.issues.size() == 1 && mode_ == "diffraction");
 }
 
 Decibels ItmModel::lossNotExceededAnnual(double percent) const {
@@ -76,10 +75,9 @@ Decibels ItmModel::lossNotExceededAnnual(double percent) const {
     const double fMhz = params_.frequency.megahertz();
     // mdvar 13: location/situation variability off — engineered point-to-point link.
     ITM_P2P_TLS_Ex(std::max(0.5, params_.antennaHeightAglA.value()),
-                   std::max(0.5, params_.antennaHeightAglB.value()),
-                   const_cast<double*>(pfl_.data()), params_.climate, params_.seaLevelN0, fMhz,
-                   params_.polarization, params_.groundEpsilon, params_.groundSigma, 13, p, 50.0, 50.0, &a,
-                   &warnings, &iv);
+                   std::max(0.5, params_.antennaHeightAglB.value()), const_cast<double*>(pfl_.data()),
+                   params_.climate, params_.seaLevelN0, fMhz, params_.polarization, params_.groundEpsilon,
+                   params_.groundSigma, 13, p, 50.0, 50.0, &a, &warnings, &iv);
     return Decibels(a) + couplingLoss_;
 }
 

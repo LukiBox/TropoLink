@@ -23,8 +23,8 @@ TEST(Geodesy, ReferenceScenarioDistancePinned) {
 TEST(Geodesy, KarneyReferenceCase) {
     // JFK -> LHR style canonical example from GeographicLib documentation:
     // (40.6, -73.8) to (51.6, -0.5), s12 = 5551759.4003 m.
-    const auto r = Geodesy::inverse(GeoPoint{Degrees(40.6), Degrees(-73.8)},
-                                    GeoPoint{Degrees(51.6), Degrees(-0.5)});
+    const auto r =
+        Geodesy::inverse(GeoPoint{Degrees(40.6), Degrees(-73.8)}, GeoPoint{Degrees(51.6), Degrees(-0.5)});
     EXPECT_NEAR(r.distance.value(), 5551759.4003, 0.001);
 }
 

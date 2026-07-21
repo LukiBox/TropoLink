@@ -18,21 +18,21 @@ namespace tl::tropo {
 struct P617Params {
     Hertz frequency{};
     Meters pathLength{};
-    Radians takeoffA{};        // theta_t
-    Radians takeoffB{};        // theta_r
+    Radians takeoffA{}; // theta_t
+    Radians takeoffB{}; // theta_r
     Dbi gainA{};
     Dbi gainB{};
     double seaLevelN0 = 315.0; // N0 from the digital map at the common volume
     double lapseRateDn = 40.0; // dN (positive per P.452 convention)
     double kFactor = 4.0 / 3.0;
-    Meters surfaceHeightAmsl{};  // h_s: mean height of the surface under the path
-    Meters antennaAmslA{};       // h_t
-    Meters antennaAmslB{};       // h_r
+    Meters surfaceHeightAmsl{}; // h_s: mean height of the surface under the path
+    Meters antennaAmslA{};      // h_t
+    Meters antennaAmslB{};      // h_r
     bool terrainAvailable = true;
 };
 
 class P617Model final : public LossModel {
-public:
+  public:
     explicit P617Model(const P617Params& params);
 
     [[nodiscard]] ModelId id() const override { return ModelId::P617; }
@@ -50,15 +50,15 @@ public:
     [[nodiscard]] Meters commonVolumeHeight() const { return Meters(h0Km_ * 1000.0); }
     [[nodiscard]] double fTerm() const { return f_; }
 
-private:
+  private:
     P617Params params_;
     Validity validity_;
     Decibels couplingLoss_{0.0};
     double thetaMrad_ = 0.0;
     double h0Km_ = 0.0;
-    double f_ = 0.0;       // F term of eq. (5)
-    double median_ = 0.0;  // L_bs(50)
-    double ns_ = 301.0;    // surface refractivity at h_s (for P.841)
+    double f_ = 0.0;      // F term of eq. (5)
+    double median_ = 0.0; // L_bs(50)
+    double ns_ = 301.0;   // surface refractivity at h_s (for P.841)
 };
 
 } // namespace tl::tropo

@@ -107,8 +107,8 @@ AutoDesignResult autoDesign(const AutoDesignGeometry& geometry, const geo::Atmos
                 // Invert the budget for the transmit power this configuration needs.
                 const double txDbm = requiredMargin.value() + constraints.designHeadroom.value() +
                                      constraints.lineLossA.value() + constraints.lineLossB.value() -
-                                     gain.value() - gain.value() + medianLoss.value() +
-                                     noise.value() + mod.requiredSnr().value();
+                                     gain.value() - gain.value() + medianLoss.value() + noise.value() +
+                                     mod.requiredSnr().value();
 
                 Candidate c;
                 c.freqGhz = fGhz;
@@ -142,12 +142,11 @@ AutoDesignResult autoDesign(const AutoDesignGeometry& geometry, const geo::Atmos
         // Among configurations that close the link, prefer the cheapest to field:
         // within 1 dB of the lowest required power, take the smallest dish, then the
         // lowest frequency. A 1 dB power saving never justifies a bigger reflector.
-        const double bestTx =
-            std::min_element(feasibleCandidates.begin(), feasibleCandidates.end(),
-                             [](const Candidate& a, const Candidate& b) {
-                                 return a.requiredTx.value() < b.requiredTx.value();
-                             })
-                ->requiredTx.value();
+        const double bestTx = std::min_element(feasibleCandidates.begin(), feasibleCandidates.end(),
+                                               [](const Candidate& a, const Candidate& b) {
+                                                   return a.requiredTx.value() < b.requiredTx.value();
+                                               })
+                                  ->requiredTx.value();
         std::vector<Candidate> shortlist;
         for (const auto& c : feasibleCandidates) {
             if (c.requiredTx.value() <= bestTx + 1.0) {
@@ -185,16 +184,13 @@ AutoDesignResult autoDesign(const AutoDesignGeometry& geometry, const geo::Atmos
         const Hertz bandwidth = mod.bandwidthFor(constraints.dataRate);
         const Dbm noise = noiseFloorDbm(bandwidth, constraints.noiseFigure);
         const double margin = best.txPower.value() - constraints.lineLossA.value() -
-                              constraints.lineLossB.value() + chosen.gain.value() +
-                              chosen.gain.value() - chosen.medianLoss.value() - noise.value() -
-                              mod.requiredSnr().value();
+                              constraints.lineLossB.value() + chosen.gain.value() + chosen.gain.value() -
+                              chosen.medianLoss.value() - noise.value() - mod.requiredSnr().value();
         best.fadeMargin = Decibels(margin);
         if (chosen.model) {
             const AvailabilityEngine engine(*chosen.model);
-            best.availabilityAnnual =
-                engine.availability(best.fadeMargin, constraints.diversity, false);
-            best.availabilityWorstMonth =
-                engine.availability(best.fadeMargin, constraints.diversity, true);
+            best.availabilityAnnual = engine.availability(best.fadeMargin, constraints.diversity, false);
+            best.availabilityWorstMonth = engine.availability(best.fadeMargin, constraints.diversity, true);
         }
     }
 
@@ -203,9 +199,8 @@ AutoDesignResult autoDesign(const AutoDesignGeometry& geometry, const geo::Atmos
         if (c.freqGhz == chosen.freqGhz && c.modulationIndex == chosen.modulationIndex &&
             c.diameterM > chosen.diameterM) {
             const double penalty = c.requiredTx.value() - chosen.requiredTx.value();
-            if (penalty > 0.0 &&
-                (best.rejectedLargerDiameter.value() == 0.0 ||
-                 c.diameterM < best.rejectedLargerDiameter.value())) {
+            if (penalty > 0.0 && (best.rejectedLargerDiameter.value() == 0.0 ||
+                                  c.diameterM < best.rejectedLargerDiameter.value())) {
                 best.rejectedLargerDiameter = Meters(c.diameterM);
                 best.rejectedLargerPenaltyDb = Decibels(penalty);
             }
@@ -213,8 +208,8 @@ AutoDesignResult autoDesign(const AutoDesignGeometry& geometry, const geo::Atmos
     }
 
     // --- what changed and why -------------------------------------------------
-    auto addChange = [&best](const char* field, const std::string& oldValue,
-                             const std::string& newValue, const char* reasonKey) {
+    auto addChange = [&best](const char* field, const std::string& oldValue, const std::string& newValue,
+                             const char* reasonKey) {
         if (oldValue == newValue) {
             return;
         }

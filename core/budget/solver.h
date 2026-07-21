@@ -24,20 +24,20 @@ struct SolverResult {
     bool feasible = false;
     std::string note;
     // Populated depending on solveFor:
-    std::optional<Dbm> requiredTxPower;       // and its Watts equivalent for display
-    std::optional<Dbi> requiredAntennaGain;   // per antenna, both ends equal
+    std::optional<Dbm> requiredTxPower;     // and its Watts equivalent for display
+    std::optional<Dbi> requiredAntennaGain; // per antenna, both ends equal
     std::optional<BitsPerSecond> maxDataRate;
-    Decibels requiredMedianMargin{0.0};       // margin the target availability demands
+    Decibels requiredMedianMargin{0.0}; // margin the target availability demands
     Decibels currentMedianMargin{0.0};
 };
 
 class DesignSolver {
-public:
+  public:
     DesignSolver(const AvailabilityEngine& engine, const RadioParams& radio, Decibels medianPathLoss);
 
     [[nodiscard]] SolverResult solve(const SolverRequest& request) const;
 
-private:
+  private:
     const AvailabilityEngine& engine_;
     RadioParams radio_;
     Decibels medianPathLoss_;

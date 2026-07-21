@@ -5,7 +5,9 @@
 
 #include <cmath>
 
-CurveItem::CurveItem(QQuickItem* parent) : QQuickPaintedItem(parent) { setAntialiasing(true); }
+CurveItem::CurveItem(QQuickItem* parent) : QQuickPaintedItem(parent) {
+    setAntialiasing(true);
+}
 
 void CurveItem::setPoints(const QVariantList& v) {
     points_ = v;
@@ -72,13 +74,11 @@ void CurveItem::paint(QPainter* p) {
         p->setPen(QPen(QColor(axis.red(), axis.green(), axis.blue(), 60), 0.8, Qt::DotLine));
         p->drawLine(QPointF(left, y), QPointF(right, y));
         p->setPen(axis);
-        p->drawText(QRectF(0, y - 7, left - 4, 14), Qt::AlignRight | Qt::AlignVCenter,
-                    QString::number(a));
+        p->drawText(QRectF(0, y - 7, left - 4, 14), Qt::AlignRight | Qt::AlignVCenter, QString::number(a));
     }
     for (double m = std::ceil(mMin / 10.0) * 10.0; m <= mMax; m += 10.0) {
         p->setPen(axis);
-        p->drawText(QRectF(xPix(m) - 20, bottom + 2, 40, 14), Qt::AlignCenter,
-                    QStringLiteral("%1").arg(m));
+        p->drawText(QRectF(xPix(m) - 20, bottom + 2, 40, 14), Qt::AlignCenter, QStringLiteral("%1").arg(m));
     }
 
     QPainterPath path;

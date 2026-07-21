@@ -43,7 +43,9 @@ double Atmosphere::kFromLapseRate(double dnPerKm) {
     return 157.0 / denominator;
 }
 
-double Atmosphere::lapseRateFromNs(double ns) { return 7.32 * std::exp(0.005577 * ns); }
+double Atmosphere::lapseRateFromNs(double ns) {
+    return 7.32 * std::exp(0.005577 * ns);
+}
 
 Climate defaultClimateFor(const GeoPoint& p) {
     const double absLat = std::abs(p.latitude.value());
@@ -104,9 +106,13 @@ double RefractivityMaps::sample(const std::vector<double>& grid, const GeoPoint&
            fr * ((1.0 - fc) * at(r0 + 1, c0) + fc * at(r0 + 1, c0 + 1));
 }
 
-double RefractivityMaps::n0At(const GeoPoint& p) const { return sample(n0_, p); }
+double RefractivityMaps::n0At(const GeoPoint& p) const {
+    return sample(n0_, p);
+}
 
-double RefractivityMaps::dnAt(const GeoPoint& p) const { return sample(dn_, p); }
+double RefractivityMaps::dnAt(const GeoPoint& p) const {
+    return sample(dn_, p);
+}
 
 Atmosphere RefractivityMaps::atmosphereAt(const GeoPoint& midpoint) const {
     Atmosphere atm;

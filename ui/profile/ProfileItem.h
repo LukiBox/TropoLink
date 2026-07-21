@@ -26,7 +26,7 @@ class ProfileItem : public QQuickItem {
     Q_PROPERTY(bool darkTheme READ darkTheme WRITE setDarkTheme NOTIFY dataChanged)
     QML_ELEMENT
 
-public:
+  public:
     explicit ProfileItem(QQuickItem* parent = nullptr);
 
     QPolygonF terrain() const { return terrain_; }
@@ -58,14 +58,14 @@ public:
     Q_INVOKABLE QVariantList elevationTicks() const;
     Q_INVOKABLE QVariantList distanceTicks() const;
 
-signals:
+  signals:
     void dataChanged();
 
-protected:
+  protected:
     QSGNode* updatePaintNode(QSGNode* node, UpdatePaintNodeData* data) override;
     void geometryChange(const QRectF& newGeometry, const QRectF& oldGeometry) override;
 
-private:
+  private:
     void computeViewport();
 
     QPolygonF terrain_;

@@ -20,10 +20,10 @@ struct HorizonResult {
     Meters horizonDistanceB{0.0}; // distance from B to its horizon point
     Meters horizonHeightA{0.0};   // terrain elevation AMSL at A's horizon point
     Meters horizonHeightB{0.0};
-    bool directPathObstructed = false;   // ray A->B intersects terrain
-    bool fresnelZoneClear = false;       // >= 60% of first Fresnel radius everywhere
-    Meters worstClearance{0.0};          // minimum clearance of the direct ray over terrain
-    Meters worstClearanceDistance{0.0};  // where it occurs (from A)
+    bool directPathObstructed = false;  // ray A->B intersects terrain
+    bool fresnelZoneClear = false;      // >= 60% of first Fresnel radius everywhere
+    Meters worstClearance{0.0};         // minimum clearance of the direct ray over terrain
+    Meters worstClearanceDistance{0.0}; // where it occurs (from A)
 };
 
 struct HorizonRequest {

@@ -38,11 +38,11 @@ enum class Climate {
 [[nodiscard]] const char* climateName(Climate climate);
 
 struct Atmosphere {
-    double kFactor = 4.0 / 3.0;       // effective earth radius factor (user-overridable)
-    double seaLevelN0 = 315.0;        // average annual sea-level surface refractivity
-    double lapseRateDn = 40.0;        // dN through lowest 1 km, N-units/km, positive per P.452
+    double kFactor = 4.0 / 3.0; // effective earth radius factor (user-overridable)
+    double seaLevelN0 = 315.0;  // average annual sea-level surface refractivity
+    double lapseRateDn = 40.0;  // dN through lowest 1 km, N-units/km, positive per P.452
     Climate climate = Climate::ContinentalTemperate;
-    bool kFactorOverridden = false;   // true once the operator forces a k value
+    bool kFactorOverridden = false; // true once the operator forces a k value
 
     static constexpr double kEarthRadiusKm = 6370.0; // ITU-R P.617-5 eq. (2)
 
@@ -64,7 +64,7 @@ struct Atmosphere {
 
 // Reader for the ITU-R P.452 / P.617-5 digital maps (N050.TXT, DN50.TXT).
 class RefractivityMaps {
-public:
+  public:
     // Loads both maps from a directory containing N050.TXT and DN50.TXT.
     [[nodiscard]] static Expected<RefractivityMaps> load(const std::string& directory);
 
@@ -74,7 +74,7 @@ public:
     // Atmosphere defaulted from the maps at a path midpoint (k from dN, climate from latitude).
     [[nodiscard]] Atmosphere atmosphereAt(const GeoPoint& midpoint) const;
 
-private:
+  private:
     static constexpr int kRows = 121;
     static constexpr int kCols = 241;
     std::vector<double> n0_;

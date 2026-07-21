@@ -25,7 +25,7 @@ struct Validity {
 };
 
 class LossModel {
-public:
+  public:
     virtual ~LossModel() = default;
 
     [[nodiscard]] virtual ModelId id() const = 0;

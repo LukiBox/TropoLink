@@ -68,8 +68,8 @@ MapDownloader::~MapDownloader() {
     }
 }
 
-double MapDownloader::estimateTiles(double minLat, double maxLat, double minLon, double maxLon,
-                                    int minZoom, int maxZoom) {
+double MapDownloader::estimateTiles(double minLat, double maxLat, double minLon, double maxLon, int minZoom,
+                                    int maxZoom) {
     double count = 0.0;
     for (int z = std::max(0, minZoom); z <= maxZoom; ++z) {
         const TileRange r = rangeFor(minLat, maxLat, minLon, maxLon, z);
@@ -79,8 +79,8 @@ double MapDownloader::estimateTiles(double minLat, double maxLat, double minLon,
 }
 
 QString MapDownloader::defaultOutputDir() {
-    const QString dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) +
-                        QStringLiteral("/maps");
+    const QString dir =
+        QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QStringLiteral("/maps");
     QDir().mkpath(dir);
     return dir;
 }
@@ -112,8 +112,8 @@ void MapDownloader::finish(bool ok) {
 
 #ifndef TROPOLINK_AIRGAP
 
-void MapDownloader::start(const QString& sourceId, double minLat, double maxLat, double minLon,
-                          double maxLon, int minZoom, int maxZoom, const QString& outputPath) {
+void MapDownloader::start(const QString& sourceId, double minLat, double maxLat, double minLon, double maxLon,
+                          int minZoom, int maxZoom, const QString& outputPath) {
     if (running_) {
         return;
     }
@@ -173,8 +173,7 @@ void MapDownloader::start(const QString& sourceId, double minLat, double maxLat,
                  nullptr, nullptr, nullptr);
     const auto meta = [this](const char* name, const QString& value) {
         sqlite3_stmt* stmt = nullptr;
-        if (sqlite3_prepare_v2(db_, "INSERT INTO metadata VALUES (?, ?)", -1, &stmt, nullptr) ==
-            SQLITE_OK) {
+        if (sqlite3_prepare_v2(db_, "INSERT INTO metadata VALUES (?, ?)", -1, &stmt, nullptr) == SQLITE_OK) {
             sqlite3_bind_text(stmt, 1, name, -1, SQLITE_TRANSIENT);
             const QByteArray utf8 = value.toUtf8();
             sqlite3_bind_text(stmt, 2, utf8.constData(), -1, SQLITE_TRANSIENT);
@@ -195,9 +194,8 @@ void MapDownloader::start(const QString& sourceId, double minLat, double maxLat,
     meta("attribution",
          sourceId_ == QLatin1String("osm")
              ? QStringLiteral("\xC2\xA9 OpenStreetMap contributors")
-             : QStringLiteral(
-                   "\xC2\xA9 OpenStreetMap contributors, SRTM | style \xC2\xA9 OpenTopoMap "
-                   "(CC-BY-SA)"));
+             : QStringLiteral("\xC2\xA9 OpenStreetMap contributors, SRTM | style \xC2\xA9 OpenTopoMap "
+                              "(CC-BY-SA)"));
     sqlite3_exec(db_, "BEGIN", nullptr, nullptr, nullptr);
     sinceCommit_ = 0;
 
@@ -218,14 +216,13 @@ void MapDownloader::storeTile(const Job& job, const QByteArray& data) {
         return;
     }
     sqlite3_stmt* stmt = nullptr;
-    if (sqlite3_prepare_v2(db_, "INSERT OR REPLACE INTO tiles VALUES (?, ?, ?, ?)", -1, &stmt,
-                           nullptr) == SQLITE_OK) {
+    if (sqlite3_prepare_v2(db_, "INSERT OR REPLACE INTO tiles VALUES (?, ?, ?, ?)", -1, &stmt, nullptr) ==
+        SQLITE_OK) {
         const int tmsRow = (1 << job.z) - 1 - job.y; // MBTiles stores TMS rows
         sqlite3_bind_int(stmt, 1, job.z);
         sqlite3_bind_int(stmt, 2, job.x);
         sqlite3_bind_int(stmt, 3, tmsRow);
-        sqlite3_bind_blob(stmt, 4, data.constData(), static_cast<int>(data.size()),
-                          SQLITE_TRANSIENT);
+        sqlite3_bind_blob(stmt, 4, data.constData(), static_cast<int>(data.size()), SQLITE_TRANSIENT);
         sqlite3_step(stmt);
         sqlite3_finalize(stmt);
     }
@@ -248,9 +245,8 @@ void MapDownloader::dispatch() {
     }
     if (queue_.isEmpty()) {
         if (inFlight_ == 0) {
-            setStatus(failed_ == 0
-                          ? tr("Done: %1 tiles").arg(done_)
-                          : tr("Done: %1 tiles, %2 failed").arg(done_).arg(failed_));
+            setStatus(failed_ == 0 ? tr("Done: %1 tiles").arg(done_)
+                                   : tr("Done: %1 tiles, %2 failed").arg(done_).arg(failed_));
             finish(true);
         }
         return;
@@ -296,8 +292,7 @@ void MapDownloader::dispatch() {
             if (!data.isEmpty()) {
                 storeTile(job, data);
                 // Feed the browsing cache too: the map benefits immediately.
-                const QString dir =
-                    QStringLiteral("%1/%2/%3").arg(cacheDir_).arg(job.z).arg(job.x);
+                const QString dir = QStringLiteral("%1/%2/%3").arg(cacheDir_).arg(job.z).arg(job.x);
                 QDir().mkpath(dir);
                 QFile file(dir + QStringLiteral("/%1.png").arg(job.y));
                 if (file.open(QIODevice::WriteOnly)) {
@@ -324,8 +319,7 @@ void MapDownloader::dispatch() {
 
 #else // TROPOLINK_AIRGAP
 
-void MapDownloader::start(const QString&, double, double, double, double, int, int,
-                          const QString&) {
+void MapDownloader::start(const QString&, double, double, double, double, int, int, const QString&) {
     setStatus(tr("The map downloader is not present in the Air-Gap build"));
 }
 

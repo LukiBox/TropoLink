@@ -8,8 +8,8 @@
 #include "ui/models/HelpContent.h"
 #include "ui/report/PdfReport.h"
 
-#include <gdal.h>
 #include <GeographicLib/Constants.hpp>
+#include <gdal.h>
 
 #ifndef TROPOLINK_AIRGAP
 #include "core/ai/ollama_client.h"
@@ -49,7 +49,9 @@ QString dataDirectory() {
     return QStringLiteral(TROPOLINK_SOURCE_DATA_DIR);
 }
 
-std::string toUtf8(const QString& s) { return s.toStdString(); }
+std::string toUtf8(const QString& s) {
+    return s.toStdString();
+}
 
 QString localPath(const QUrl& url) {
     return url.isLocalFile() ? url.toLocalFile() : url.toString();
@@ -75,8 +77,7 @@ AppController::AppController(QObject* parent) : QObject(parent) {
         for (const auto& info : bundled.entryInfoList({QStringLiteral("*.dt0"), QStringLiteral("*.dt1"),
                                                        QStringLiteral("*.dt2"), QStringLiteral("*.hgt")},
                                                       QDir::Files)) {
-            (void)terrainStore_->importFile(toUtf8(info.absoluteFilePath()),
-                                            terrain::Provenance::Imported);
+            (void)terrainStore_->importFile(toUtf8(info.absoluteFilePath()), terrain::Provenance::Imported);
         }
     }
     if (auto maps = geo::RefractivityMaps::load(toUtf8(dataDirectory()))) {
@@ -303,9 +304,7 @@ int AppController::primaryModelIndex() const {
 }
 
 void AppController::setPrimaryModelIndex(int v) {
-    link_.primaryModel = v == 1   ? tropo::ModelId::Tn101
-                         : v == 2 ? tropo::ModelId::Itm
-                                  : tropo::ModelId::P617;
+    link_.primaryModel = v == 1 ? tropo::ModelId::Tn101 : v == 2 ? tropo::ModelId::Itm : tropo::ModelId::P617;
     emit targetChanged();
     scheduleRecompute(true);
 }
@@ -397,9 +396,8 @@ QVariantMap AppController::parseCoordinate(const QString& text) const {
     if (!parsed) {
         return QVariantMap{{"ok", false}};
     }
-    return QVariantMap{{"ok", true},
-                       {"lat", parsed.value().latitude.value()},
-                       {"lon", parsed.value().longitude.value()}};
+    return QVariantMap{
+        {"ok", true}, {"lat", parsed.value().latitude.value()}, {"lon", parsed.value().longitude.value()}};
 }
 
 QVariantMap AppController::coordinateFormats(double lat, double lon) const {
@@ -428,8 +426,7 @@ void AppController::importTerrainFiles(const QList<QUrl>& urls) {
     }
     int imported = 0;
     for (const auto& url : urls) {
-        const auto result =
-            terrainStore_->importFile(toUtf8(localPath(url)), terrain::Provenance::Imported);
+        const auto result = terrainStore_->importFile(toUtf8(localPath(url)), terrain::Provenance::Imported);
         if (result) {
             ++imported;
         } else {
@@ -533,9 +530,8 @@ void AppController::runComputation(quint64 rev, LinkState state, std::stop_token
 
     // 3) Budget + availability from the primary model.
     const auto primary = outcome->suite.primaryModel();
-    const Decibels medianLoss = primary != nullptr && primary->validity().valid
-                                    ? primary->medianLoss()
-                                    : outcome->suite.fspl;
+    const Decibels medianLoss =
+        primary != nullptr && primary->validity().valid ? primary->medianLoss() : outcome->suite.fspl;
     outcome->budget = budget::computeLinkBudget(state.radio, medianLoss);
     if (primary != nullptr && primary->validity().valid) {
         outcome->engine = std::make_shared<budget::AvailabilityEngine>(*primary);
@@ -544,16 +540,15 @@ void AppController::runComputation(quint64 rev, LinkState state, std::stop_token
         outcome->availabilityWorstMonth =
             outcome->engine->availability(outcome->budget.fadeMargin, state.diversity, true);
     }
-    outcome->separation = budget::diversitySeparation(state.antennaDiameter, state.frequency,
-                                                      outcome->suite.geometry.scatterAngle,
-                                                      outcome->suite.inverse.distance);
+    outcome->separation =
+        budget::diversitySeparation(state.antennaDiameter, state.frequency,
+                                    outcome->suite.geometry.scatterAngle, outcome->suite.inverse.distance);
     outcome->computeMs = static_cast<double>(timer.elapsed());
 
     if (revision_.load() != rev) {
         return;
     }
-    QMetaObject::invokeMethod(
-        this, [this, outcome] { deliverOutcome(outcome); }, Qt::QueuedConnection);
+    QMetaObject::invokeMethod(this, [this, outcome] { deliverOutcome(outcome); }, Qt::QueuedConnection);
 }
 
 void AppController::deliverOutcome(std::shared_ptr<ComputeOutcome> outcome) {
@@ -610,17 +605,14 @@ void AppController::deliverOutcome(std::shared_ptr<ComputeOutcome> outcome) {
 
     waterfall_.clear();
     for (const auto& item : outcome->budget.waterfall) {
-        waterfall_ << QVariantMap{{"key", QString::fromStdString(item.label)},
-                                  {"value", item.valueDb},
-                                  {"isLevel", item.isLevel}};
+        waterfall_ << QVariantMap{
+            {"key", QString::fromStdString(item.label)}, {"value", item.valueDb}, {"isLevel", item.isLevel}};
     }
-    budget_ = QVariantMap{{"eirp", outcome->budget.eirp.value()},
-                          {"pathLoss", outcome->budget.pathLoss.value()},
-                          {"rsl", outcome->budget.medianRsl.value()},
-                          {"noise", outcome->budget.noiseFloor.value()},
-                          {"snr", outcome->budget.medianSnr.value()},
-                          {"requiredSnr", outcome->budget.requiredSnr.value()},
-                          {"margin", outcome->budget.fadeMargin.value()}};
+    budget_ = QVariantMap{
+        {"eirp", outcome->budget.eirp.value()},        {"pathLoss", outcome->budget.pathLoss.value()},
+        {"rsl", outcome->budget.medianRsl.value()},    {"noise", outcome->budget.noiseFloor.value()},
+        {"snr", outcome->budget.medianSnr.value()},    {"requiredSnr", outcome->budget.requiredSnr.value()},
+        {"margin", outcome->budget.fadeMargin.value()}};
 
     availability_ = QVariantMap{
         {"annual", outcome->availabilityAnnual.value()},
@@ -633,8 +625,8 @@ void AppController::deliverOutcome(std::shared_ptr<ComputeOutcome> outcome) {
     };
     if (outcome->engine) {
         availability_["divGain"] =
-            outcome->engine->diversityGain(link_.targetAvailability, link_.diversity,
-                                           link_.targetIsWorstMonth)
+            outcome->engine
+                ->diversityGain(link_.targetAvailability, link_.diversity, link_.targetIsWorstMonth)
                 .value();
         availability_["requiredMargin"] =
             outcome->engine
@@ -755,8 +747,7 @@ void AppController::deliverOutcome(std::shared_ptr<ComputeOutcome> outcome) {
                                {"antennaB", hB},
                                {"aglA", link_.aglA.value()},
                                {"aglB", link_.aglB.value()},
-                               {"lensBaseY",
-                                suite.geometry.volumeBaseAmsl.value() + bulge(xTop)},
+                               {"lensBaseY", suite.geometry.volumeBaseAmsl.value() + bulge(xTop)},
                                {"lensTopY", lensTopY},
                                {"lensX", xTop},
                                {"thetaMrad", suite.geometry.scatterAngle.milliradians()}};
@@ -833,22 +824,19 @@ QVariantMap AppController::autoDesignRadio() {
 
     // Stable reason keys -> operator-facing, translatable text.
     static const QHash<QString, QString> reasons = {
-        {"reason_frequency",
-         tr("Band chosen by sweeping every troposcatter allocation: for a fixed dish, "
-            "higher frequency buys more antenna gain than it costs in path loss, until "
-            "absorption and coupling take over.")},
-        {"reason_diameter",
-         tr("Smallest reflector that still meets the target — a larger one is heavier "
-            "and, past the coupling optimum, actually worse.")},
+        {"reason_frequency", tr("Band chosen by sweeping every troposcatter allocation: for a fixed dish, "
+                                "higher frequency buys more antenna gain than it costs in path loss, until "
+                                "absorption and coupling take over.")},
+        {"reason_diameter", tr("Smallest reflector that still meets the target — a larger one is heavier "
+                               "and, past the coupling optimum, actually worse.")},
         // Split escapes: "\x80D" would otherwise be read as one over-long hex escape.
         {"reason_gain", tr("Follows from the reflector size at the chosen frequency "
-                           "(G = \xCE\xB7(\xCF\x80" "Df/c)\xC2\xB2, 55% aperture efficiency).")},
-        {"reason_txpower",
-         tr("Lowest power that meets the availability target with 3 dB design headroom "
-            "— less power means less prime power, less heat and a smaller signature.")},
-        {"reason_modulation",
-         tr("Needs the least transmit power at this data rate once its wider or "
-            "narrower occupied bandwidth is accounted for in the noise floor.")},
+                           "(G = \xCE\xB7(\xCF\x80"
+                           "Df/c)\xC2\xB2, 55% aperture efficiency).")},
+        {"reason_txpower", tr("Lowest power that meets the availability target with 3 dB design headroom "
+                              "— less power means less prime power, less heat and a smaller signature.")},
+        {"reason_modulation", tr("Needs the least transmit power at this data rate once its wider or "
+                                 "narrower occupied bandwidth is accounted for in the noise floor.")},
     };
 
     QVariantList changes;
@@ -876,8 +864,7 @@ QVariantMap AppController::autoDesignRadio() {
     if (result.modulationIndex >= 0 &&
         result.modulationIndex < static_cast<int>(modulations_.entries().size())) {
         modulationIndex_ = result.modulationIndex;
-        link_.radio.modulation =
-            modulations_.entries()[static_cast<std::size_t>(result.modulationIndex)];
+        link_.radio.modulation = modulations_.entries()[static_cast<std::size_t>(result.modulationIndex)];
     }
 
     out["ok"] = result.feasible;
@@ -896,11 +883,10 @@ QVariantMap AppController::autoDesignRadio() {
         out["rejectedDiameterM"] = result.rejectedLargerDiameter.value();
         out["rejectedPenaltyDb"] = result.rejectedLargerPenaltyDb.value();
     }
-    out["note"] = result.feasible
-                      ? tr("Configuration applied.")
-                      : tr("No configuration within the equipment limits reaches the target; "
-                           "the closest one was applied. Relax the availability target, add "
-                           "diversity, raise the antennas or shorten the path.");
+    out["note"] = result.feasible ? tr("Configuration applied.")
+                                  : tr("No configuration within the equipment limits reaches the target; "
+                                       "the closest one was applied. Relax the availability target, add "
+                                       "diversity, raise the antennas or shorten the path.");
 
     emit radioChanged();
     scheduleRecompute(true);
@@ -943,8 +929,8 @@ bool AppController::exportBudgetCsv(const QUrl& url) {
     if (!outcome_) {
         return false;
     }
-    const auto status = tl::project::exportCsv(
-        tl::project::budgetCsv(outcome_->budget, outcome_->suite), toUtf8(localPath(url)));
+    const auto status = tl::project::exportCsv(tl::project::budgetCsv(outcome_->budget, outcome_->suite),
+                                               toUtf8(localPath(url)));
     setStatus(status ? tr("Budget CSV exported") : QString::fromStdString(status.error().message));
     return static_cast<bool>(status);
 }
@@ -981,8 +967,7 @@ tl::project::Project AppController::currentProject() const {
     if (outcome_) {
         tl::project::ResultSnapshot snap;
         snap.linkId = "link-1";
-        snap.createdIso8601 =
-            QDateTime::currentDateTimeUtc().toString(Qt::ISODate).toStdString();
+        snap.createdIso8601 = QDateTime::currentDateTimeUtc().toString(Qt::ISODate).toStdString();
         snap.appVersion = TROPOLINK_VERSION;
         snap.gdalVersion = GDALVersionInfo("RELEASE_NAME");
         snap.geographicLibVersion = GEOGRAPHICLIB_VERSION_STRING;
@@ -1047,7 +1032,9 @@ bool AppController::loadProjectFile(const QUrl& url) {
     return true;
 }
 
-void AppController::loadReferenceProject() { applyProject(tl::project::referenceProject()); }
+void AppController::loadReferenceProject() {
+    applyProject(tl::project::referenceProject());
+}
 
 bool AppController::generateReport(const QUrl& url, const QImage& mapSnapshot) {
     if (!outcome_ || !outcome_->engine) {
@@ -1060,10 +1047,9 @@ bool AppController::generateReport(const QUrl& url, const QImage& mapSnapshot) {
     auto outcome = outcome_;
     ReportRenderInputs inputs;
     inputs.diversity = link_.diversity;
-    inputs.language = languageCode_ == QLatin1String("pl") ? tl::report::Language::Polish
-                                                           : tl::report::Language::English;
-    inputs.terrainSources =
-        terrainStore_ ? terrainStore_->entries() : std::vector<tl::terrain::StoreEntry>{};
+    inputs.language =
+        languageCode_ == QLatin1String("pl") ? tl::report::Language::Polish : tl::report::Language::English;
+    inputs.terrainSources = terrainStore_ ? terrainStore_->entries() : std::vector<tl::terrain::StoreEntry>{};
     inputs.mapSnapshot = mapSnapshot;
     inputs.terrain = profileTerrain_;
     inputs.rayA = profileRayA_;
@@ -1295,8 +1281,7 @@ void AppController::downloadSrtmForRegion(double minLat, double maxLat, double m
         int imported = 0;
     };
     auto job = std::make_shared<Job>();
-    for (int lat = static_cast<int>(std::floor(minLat)); lat <= static_cast<int>(std::floor(maxLat));
-         ++lat) {
+    for (int lat = static_cast<int>(std::floor(minLat)); lat <= static_cast<int>(std::floor(maxLat)); ++lat) {
         for (int lon = static_cast<int>(std::floor(minLon)); lon <= static_cast<int>(std::floor(maxLon));
              ++lon) {
             job->tiles.append({lat, lon});
@@ -1335,8 +1320,7 @@ void AppController::downloadSrtmForRegion(double minLat, double maxLat, double m
                 const QByteArray raw = gunzip(reply->readAll());
                 // SRTM 1" tile: 3601 x 3601 16-bit samples — verified by exact size.
                 if (raw.size() == 3601 * 3601 * 2) {
-                    const QString dir =
-                        QStandardPaths::writableLocation(QStandardPaths::TempLocation);
+                    const QString dir = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
                     const QString path = dir + QStringLiteral("/") + name + QStringLiteral(".hgt");
                     QFile file(path);
                     if (file.open(QIODevice::WriteOnly)) {

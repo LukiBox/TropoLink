@@ -41,7 +41,7 @@ enum class DiversityMode { None, Space, Frequency, Angle, Quad };
 [[nodiscard]] const char* diversityName(DiversityMode mode);
 
 class AvailabilityEngine {
-public:
+  public:
     // Captures the fade-depth distribution Delta L(u) = L(100u) - L(50) of the model,
     // annual and worst-month, on a fixed quantile grid.
     explicit AvailabilityEngine(const tropo::LossModel& model);
@@ -67,10 +67,10 @@ public:
                                                 double minMarginDb = -10.0, double maxMarginDb = 50.0,
                                                 int points = 121) const;
 
-private:
+  private:
     [[nodiscard]] double outage(double marginDb, int order, bool worstMonth) const;
 
-    std::vector<double> fadeDepthAnnualDb_;     // Delta L at grid quantiles
+    std::vector<double> fadeDepthAnnualDb_; // Delta L at grid quantiles
     std::vector<double> fadeDepthWorstMonthDb_;
     static constexpr int kGrid = 1201;
 };

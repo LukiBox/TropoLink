@@ -6,7 +6,9 @@
 namespace tl::geo {
 
 namespace {
-const GeographicLib::Geodesic& wgs84() { return GeographicLib::Geodesic::WGS84(); }
+const GeographicLib::Geodesic& wgs84() {
+    return GeographicLib::Geodesic::WGS84();
+}
 
 // GeographicLib returns azimuths in (-180, 180]; operators expect [0, 360).
 double normalizeAzimuth(double azDeg) {

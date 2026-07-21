@@ -26,7 +26,9 @@ double crossoverDistance(double hA, double hB, double tauA, double tauB, double 
     return (hB - hA + tauB * d + d * d / (2.0 * ka)) / theta;
 }
 
-double rayHeight(double h0, double tau, double x, double ka) { return h0 + tau * x + x * x / (2.0 * ka); }
+double rayHeight(double h0, double tau, double x, double ka) {
+    return h0 + tau * x + x * x / (2.0 * ka);
+}
 } // namespace
 
 ScatterGeometry computeScatterGeometry(const ScatterGeometryInput& input) {

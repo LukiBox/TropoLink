@@ -21,7 +21,7 @@ class MapOverlayItem : public QQuickPaintedItem {
     Q_PROPERTY(QVariantList measurePoints READ measurePoints WRITE setMeasurePoints NOTIFY optionsChanged)
     QML_ELEMENT
 
-public:
+  public:
     explicit MapOverlayItem(QQuickItem* parent = nullptr);
 
     TileMapItem* map() const { return map_; }
@@ -39,11 +39,11 @@ public:
 
     void paint(QPainter* painter) override;
 
-signals:
+  signals:
     void attachedChanged();
     void optionsChanged();
 
-private:
+  private:
     void paintMgrsGrid(QPainter* painter);
 
     TileMapItem* map_ = nullptr;

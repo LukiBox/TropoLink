@@ -23,7 +23,9 @@
 namespace {
 
 // Web-mercator tile bounds in degrees.
-double tileLon(int x, int z) { return x / std::pow(2.0, z) * 360.0 - 180.0; }
+double tileLon(int x, int z) {
+    return x / std::pow(2.0, z) * 360.0 - 180.0;
+}
 double tileLat(int y, int z) {
     const double n = M_PI - 2.0 * M_PI * y / std::pow(2.0, z);
     return 180.0 / M_PI * std::atan(0.5 * (std::exp(n) - std::exp(-n)));
@@ -125,11 +127,11 @@ struct TopoPalette {
 
 TopoPalette paletteFor(bool dark) {
     if (dark) {
-        return {qRgb(30, 48, 62),  148, 156, 166, 0.42, 190, 198, 208, 0.68,
-                QColor(205, 212, 220), QColor(35, 38, 43)};
+        return {qRgb(30, 48, 62),  148, 156, 166, 0.42, 190, 198, 208, 0.68, QColor(205, 212, 220),
+                QColor(35, 38, 43)};
     }
-    return {qRgb(172, 205, 226), 130, 104, 66, 0.55, 96, 72, 40, 0.85,
-            QColor(88, 66, 36), QColor(246, 243, 233)};
+    return {qRgb(172, 205, 226),  130, 104, 66, 0.55, 96, 72, 40, 0.85, QColor(88, 66, 36),
+            QColor(246, 243, 233)};
 }
 
 } // namespace
@@ -156,8 +158,7 @@ QImage renderTopoTile(const tl::terrain::TerrainStore* store, const TileKey& key
         for (int gx = 0; gx < kGrid; ++gx) {
             const double lon = lon0 + (lon1 - lon0) * (gx - kPad + 0.5) / kSize;
             float v = 0.0f;
-            const auto sample =
-                store->elevationAt(tl::geo::GeoPoint{tl::Degrees(lat), tl::Degrees(lon)});
+            const auto sample = store->elevationAt(tl::geo::GeoPoint{tl::Degrees(lat), tl::Degrees(lon)});
             const std::size_t idx = static_cast<std::size_t>(gy) * kGrid + gx;
             if (sample && !sample->isVoid) {
                 v = static_cast<float>(sample->elevation.value());
@@ -194,9 +195,8 @@ QImage renderTopoTile(const tl::terrain::TerrainStore* store, const TileKey& key
                     }
                     if (ok) {
                         grid[i] = (tmp[i - kGrid - 1] + 2 * tmp[i - kGrid] + tmp[i - kGrid + 1] +
-                                   2 * tmp[i - 1] + 4 * tmp[i] + 2 * tmp[i + 1] +
-                                   tmp[i + kGrid - 1] + 2 * tmp[i + kGrid] +
-                                   tmp[i + kGrid + 1]) /
+                                   2 * tmp[i - 1] + 4 * tmp[i] + 2 * tmp[i + 1] + tmp[i + kGrid - 1] +
+                                   2 * tmp[i + kGrid] + tmp[i + kGrid + 1]) /
                                   16.0f;
                     }
                 }
@@ -235,12 +235,12 @@ QImage renderTopoTile(const tl::terrain::TerrainStore* store, const TileKey& key
                 continue;
             }
 
-            const double dzdx = ((at(1, -1) + 2 * at(1, 0) + at(1, 1)) -
-                                 (at(-1, -1) + 2 * at(-1, 0) + at(-1, 1))) /
-                                (8.0 * metersPerPixelX);
-            const double dzdy = ((at(-1, 1) + 2 * at(0, 1) + at(1, 1)) -
-                                 (at(-1, -1) + 2 * at(0, -1) + at(1, -1))) /
-                                (8.0 * metersPerPixelY);
+            const double dzdx =
+                ((at(1, -1) + 2 * at(1, 0) + at(1, 1)) - (at(-1, -1) + 2 * at(-1, 0) + at(-1, 1))) /
+                (8.0 * metersPerPixelX);
+            const double dzdy =
+                ((at(-1, 1) + 2 * at(0, 1) + at(1, 1)) - (at(-1, -1) + 2 * at(0, -1) + at(1, -1))) /
+                (8.0 * metersPerPixelY);
 
             // Base hypsometric tint.
             int r = 0;
@@ -299,9 +299,9 @@ QImage renderTopoTile(const tl::terrain::TerrainStore* store, const TileKey& key
                 }
             }
 
-            line[x] = qRgba(std::clamp(static_cast<int>(fr), 0, 255),
-                            std::clamp(static_cast<int>(fg), 0, 255),
-                            std::clamp(static_cast<int>(fb), 0, 255), 255);
+            line[x] =
+                qRgba(std::clamp(static_cast<int>(fr), 0, 255), std::clamp(static_cast<int>(fg), 0, 255),
+                      std::clamp(static_cast<int>(fb), 0, 255), 255);
         }
     }
 
@@ -336,8 +336,7 @@ QImage renderTopoTile(const tl::terrain::TerrainStore* store, const TileKey& key
                         }
                         auto at = [&](int dx, int dy) {
                             return static_cast<double>(
-                                grid[static_cast<std::size_t>(y + kPad + dy) * kGrid +
-                                     (x + kPad + dx)]);
+                                grid[static_cast<std::size_t>(y + kPad + dy) * kGrid + (x + kPad + dx)]);
                         };
                         const double e = at(0, 0);
                         if (e <= 0.0) {
@@ -386,9 +385,8 @@ QImage renderTopoTile(const tl::terrain::TerrainStore* store, const TileKey& key
                 painter.translate(bestX, bestY);
                 painter.rotate(angle);
                 painter.setPen(pal.labelHalo);
-                for (const QPointF off : {QPointF(-1, 0), QPointF(1, 0), QPointF(0, -1),
-                                          QPointF(0, 1), QPointF(-1, -1), QPointF(1, 1),
-                                          QPointF(-1, 1), QPointF(1, -1)}) {
+                for (const QPointF off : {QPointF(-1, 0), QPointF(1, 0), QPointF(0, -1), QPointF(0, 1),
+                                          QPointF(-1, -1), QPointF(1, 1), QPointF(-1, 1), QPointF(1, -1)}) {
                     painter.drawText(rect.translated(off), Qt::AlignCenter, text);
                 }
                 painter.setPen(pal.label);
@@ -495,8 +493,7 @@ QImage MBTilesSource::tile(const TileKey& key) {
             this,
             [this, key, image] {
                 pending_.remove(key);
-                const QImage stored =
-                    image.isNull() ? QImage(1, 1, QImage::Format_ARGB32) : image;
+                const QImage stored = image.isNull() ? QImage(1, 1, QImage::Format_ARGB32) : image;
                 cache_.insert(key, new QImage(stored), imageCost(stored));
                 emit tileReady();
             },
@@ -510,7 +507,9 @@ QImage MBTilesSource::tile(const TileKey& key) {
 TopoTileSource::TopoTileSource(tl::terrain::TerrainStore* store, QObject* parent)
     : QObject(parent), store_(store) {}
 
-TopoTileSource::~TopoTileSource() { alive_->store(false); }
+TopoTileSource::~TopoTileSource() {
+    alive_->store(false);
+}
 
 void TopoTileSource::invalidate() {
     cache_.clear();
@@ -556,16 +555,15 @@ QImage TopoTileSource::tile(const TileKey& key, bool darkTheme) {
 // --- HttpTileSource ----------------------------------------------------------
 
 QString HttpTileSource::cacheDirFor(const QString& id) {
-    return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) +
-           QStringLiteral("/tiles/") + id;
+    return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QStringLiteral("/tiles/") + id;
 }
 
-HttpTileSource::HttpTileSource(const QString& id, const QString& urlTemplate, int maxZoom,
-                               QObject* parent)
-    : QObject(parent), id_(id), urlTemplate_(urlTemplate), cacheDir_(cacheDirFor(id)),
-      maxZoom_(maxZoom) {}
+HttpTileSource::HttpTileSource(const QString& id, const QString& urlTemplate, int maxZoom, QObject* parent)
+    : QObject(parent), id_(id), urlTemplate_(urlTemplate), cacheDir_(cacheDirFor(id)), maxZoom_(maxZoom) {}
 
-HttpTileSource::~HttpTileSource() { alive_->store(false); }
+HttpTileSource::~HttpTileSource() {
+    alive_->store(false);
+}
 
 QImage HttpTileSource::tile(const TileKey& key) {
     if (key.z > maxZoom_) {
@@ -580,11 +578,8 @@ QImage HttpTileSource::tile(const TileKey& key) {
     pending_.insert(key);
 
     // Disk cache first (works fully offline once an area has been browsed).
-    const QString filePath = QStringLiteral("%1/%2/%3/%4.png")
-                                 .arg(cacheDir_)
-                                 .arg(key.z)
-                                 .arg(key.x)
-                                 .arg(key.y);
+    const QString filePath =
+        QStringLiteral("%1/%2/%3/%4.png").arg(cacheDir_).arg(key.z).arg(key.x).arg(key.y);
     auto alive = alive_;
     QThreadPool::globalInstance()->start([this, alive, key, filePath] {
         QImage image;

@@ -20,7 +20,9 @@ TEST(Coords, ParsePlainPairAndNegative) {
 }
 
 TEST(Coords, ParseDmsVariants) {
-    const auto p1 = Coords::parse("51\xC2\xB0" "30'21.9\"N 15\xC2\xB0" "19'53.4\"E");
+    const auto p1 = Coords::parse("51\xC2\xB0"
+                                  "30'21.9\"N 15\xC2\xB0"
+                                  "19'53.4\"E");
     ASSERT_TRUE(p1.hasValue());
     EXPECT_NEAR(p1.value().latitude.value(), 51.50608333, 1e-6);
     EXPECT_NEAR(p1.value().longitude.value(), 15.33150, 1e-4);

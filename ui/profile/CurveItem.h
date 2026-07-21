@@ -9,11 +9,12 @@ class CurveItem : public QQuickPaintedItem {
     Q_OBJECT
     Q_PROPERTY(QVariantList points READ points WRITE setPoints NOTIFY dataChanged)
     Q_PROPERTY(double currentMargin READ currentMargin WRITE setCurrentMargin NOTIFY dataChanged)
-    Q_PROPERTY(double targetAvailability READ targetAvailability WRITE setTargetAvailability NOTIFY dataChanged)
+    Q_PROPERTY(
+        double targetAvailability READ targetAvailability WRITE setTargetAvailability NOTIFY dataChanged)
     Q_PROPERTY(bool darkTheme READ darkTheme WRITE setDarkTheme NOTIFY dataChanged)
     QML_ELEMENT
 
-public:
+  public:
     explicit CurveItem(QQuickItem* parent = nullptr);
 
     QVariantList points() const { return points_; }
@@ -27,10 +28,10 @@ public:
 
     void paint(QPainter* painter) override;
 
-signals:
+  signals:
     void dataChanged();
 
-private:
+  private:
     QVariantList points_;
     double currentMargin_ = 0.0;
     double targetAvailability_ = 99.9;

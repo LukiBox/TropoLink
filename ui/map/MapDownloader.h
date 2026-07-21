@@ -10,8 +10,8 @@
 // the network path out; start() then reports the feature absent.
 
 #include <QObject>
-#include <QQueue>
 #include <QQmlEngine>
+#include <QQueue>
 #include <QString>
 #include <QTimer>
 
@@ -27,7 +27,7 @@ class MapDownloader : public QObject {
     Q_PROPERTY(int failed READ failed NOTIFY progressChanged)
     Q_PROPERTY(QString statusText READ statusText NOTIFY progressChanged)
 
-public:
+  public:
     explicit MapDownloader(QObject* parent = nullptr);
     ~MapDownloader() override;
 
@@ -38,20 +38,20 @@ public:
     QString statusText() const { return statusText_; }
 
     // Tile count for a bbox and zoom range (no side effects; QML binds the estimate).
-    Q_INVOKABLE static double estimateTiles(double minLat, double maxLat, double minLon,
-                                            double maxLon, int minZoom, int maxZoom);
+    Q_INVOKABLE static double estimateTiles(double minLat, double maxLat, double minLon, double maxLon,
+                                            int minZoom, int maxZoom);
     Q_INVOKABLE static QString defaultOutputDir();
 
     Q_INVOKABLE void start(const QString& sourceId, double minLat, double maxLat, double minLon,
                            double maxLon, int minZoom, int maxZoom, const QString& outputPath);
     Q_INVOKABLE void cancel();
 
-signals:
+  signals:
     void runningChanged();
     void progressChanged();
     void finished(const QString& path, bool ok);
 
-private:
+  private:
     struct Job {
         int z = 0;
         int x = 0;
@@ -62,7 +62,7 @@ private:
     void setStatus(const QString& text);
     void finish(bool ok);
 #ifndef TROPOLINK_AIRGAP
-    void dispatch();                      // start next fetch, paced
+    void dispatch(); // start next fetch, paced
     void storeTile(const Job& job, const QByteArray& data);
 #endif
 

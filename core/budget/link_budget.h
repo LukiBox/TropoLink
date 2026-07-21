@@ -14,7 +14,7 @@
 namespace tl::budget {
 
 struct RadioParams {
-    Dbm txPower{57.0};            // 500 W
+    Dbm txPower{57.0}; // 500 W
     Dbi antennaGainA{39.1};
     Dbi antennaGainB{39.1};
     Decibels lineLossA{0.5};
@@ -36,14 +36,14 @@ struct RadioParams {
 };
 
 struct WaterfallItem {
-    std::string label;    // stable identifier, localized at display time
-    double valueDb;       // the step (+gain / -loss), or the running level for markers
-    bool isLevel;         // true: absolute level marker (dBm); false: gain/loss step (dB)
+    std::string label; // stable identifier, localized at display time
+    double valueDb;    // the step (+gain / -loss), or the running level for markers
+    bool isLevel;      // true: absolute level marker (dBm); false: gain/loss step (dB)
 };
 
 struct LinkBudget {
     Dbm eirp{0.0};
-    Decibels pathLoss{0.0};      // median basic transmission loss from the primary model
+    Decibels pathLoss{0.0}; // median basic transmission loss from the primary model
     Dbm medianRsl{0.0};
     Dbm noiseFloor{0.0};
     Decibels medianSnr{0.0};

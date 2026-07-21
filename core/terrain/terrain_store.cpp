@@ -14,7 +14,9 @@ using nlohmann::json;
 
 namespace {
 
-fs::path utf8Path(const std::string& utf8) { return fs::path(std::u8string(utf8.begin(), utf8.end())); }
+fs::path utf8Path(const std::string& utf8) {
+    return fs::path(std::u8string(utf8.begin(), utf8.end()));
+}
 
 std::string toUtf8(const fs::path& p) {
     const std::u8string u8 = p.u8string();
@@ -72,8 +74,8 @@ Status TerrainStore::loadIndex() {
         StoreEntry entry;
         entry.fileName = e.value("file", "");
         entry.format = e.value("format", "");
-        entry.provenance = e.value("provenance", "imported") == "downloaded" ? Provenance::Downloaded
-                                                                             : Provenance::Imported;
+        entry.provenance =
+            e.value("provenance", "imported") == "downloaded" ? Provenance::Downloaded : Provenance::Imported;
         entry.bounds.minLat = e.value("minLat", 0.0);
         entry.bounds.maxLat = e.value("maxLat", 0.0);
         entry.bounds.minLon = e.value("minLon", 0.0);

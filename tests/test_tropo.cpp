@@ -122,8 +122,8 @@ TEST(Tropo, P617MedianMatchesHandComputation) {
     EXPECT_NEAR(model.couplingLoss().value(), lc, 1e-6);
     const double fTerm = 0.18 * 320.0 * std::exp(-0.15 / 7.35) - 0.23 * 40.0;
     EXPECT_NEAR(model.fTerm(), fTerm, 1e-6);
-    const double expected = fTerm + 22.0 * std::log10(4400.0) + 35.0 * std::log10(theta) +
-                            17.0 * std::log10(103.5) + lc;
+    const double expected =
+        fTerm + 22.0 * std::log10(4400.0) + 35.0 * std::log10(theta) + 17.0 * std::log10(103.5) + lc;
     EXPECT_NEAR(model.medianLoss().value(), expected, 1e-6);
     // The distribution behaves: higher availability -> more loss.
     EXPECT_GT(model.lossNotExceededAnnual(99.9).value(), model.medianLoss().value());

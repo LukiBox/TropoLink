@@ -11,7 +11,7 @@
 namespace tl {
 
 class Sha256 {
-public:
+  public:
     Sha256();
     void update(const void* data, std::size_t length);
     void update(std::string_view text) { update(text.data(), text.size()); }
@@ -21,7 +21,7 @@ public:
 
     [[nodiscard]] static std::string hex(std::string_view text);
 
-private:
+  private:
     void processBlock(const std::uint8_t* block);
 
     std::array<std::uint32_t, 8> state_{};

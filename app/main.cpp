@@ -60,18 +60,17 @@ int main(int argc, char* argv[]) {
         AppController controller;
         const int langIdx = static_cast<int>(args.indexOf(QStringLiteral("--lang")));
         // Transient: generating a report must not rewrite the operator's UI language.
-        controller.setLanguageCodeTransient(langIdx >= 0 && langIdx + 1 < args.size()
-                                                ? args.at(langIdx + 1)
-                                                : QStringLiteral("pl"));
+        controller.setLanguageCodeTransient(langIdx >= 0 && langIdx + 1 < args.size() ? args.at(langIdx + 1)
+                                                                                      : QStringLiteral("pl"));
         controller.loadReferenceProject();
         // Wait for the compute pipeline to settle, then render.
-        QObject::connect(&controller, &AppController::reportGenerated, &app,
-                         [&controller](const QString& path) {
-                             fileMessageHandler(QtInfoMsg, QMessageLogContext(),
-                                                QStringLiteral("report %1 sha256 %2")
-                                                    .arg(path, controller.lastReportHash()));
-                             QCoreApplication::exit(0);
-                         });
+        QObject::connect(
+            &controller, &AppController::reportGenerated, &app, [&controller](const QString& path) {
+                fileMessageHandler(
+                    QtInfoMsg, QMessageLogContext(),
+                    QStringLiteral("report %1 sha256 %2").arg(path, controller.lastReportHash()));
+                QCoreApplication::exit(0);
+            });
         QTimer::singleShot(4000, &controller, [&controller, args, reportIdx] {
             controller.generateReport(QUrl::fromLocalFile(args.at(reportIdx + 1)), QImage());
         });

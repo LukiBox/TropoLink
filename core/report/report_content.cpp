@@ -20,12 +20,15 @@ struct Entry {
 const std::map<std::string, Entry>& vocabulary() {
     static const std::map<std::string, Entry> table = {
         {"report_title", {"Troposcatter Link Design Report", "Raport projektu łącza troposferycznego"}},
-        {"feasible_green", {"FEASIBLE — margin meets the target availability",
-                            "WYKONALNE — margines spełnia docelową dostępność"}},
-        {"feasible_yellow", {"MARGINAL — margin within 3 dB of the requirement",
-                             "GRANICZNE — margines w granicach 3 dB od wymagania"}},
-        {"feasible_red", {"NOT FEASIBLE — margin below the required availability",
-                          "NIEWYKONALNE — margines poniżej wymaganej dostępności"}},
+        {"feasible_green",
+         {"FEASIBLE — margin meets the target availability",
+          "WYKONALNE — margines spełnia docelową dostępność"}},
+        {"feasible_yellow",
+         {"MARGINAL — margin within 3 dB of the requirement",
+          "GRANICZNE — margines w granicach 3 dB od wymagania"}},
+        {"feasible_red",
+         {"NOT FEASIBLE — margin below the required availability",
+          "NIEWYKONALNE — margines poniżej wymaganej dostępności"}},
         {"sec_sites", {"Sites", "Stanowiska"}},
         {"sec_geometry", {"Path geometry", "Geometria trasy"}},
         {"sec_models", {"Propagation model comparison", "Porównanie modeli propagacyjnych"}},
@@ -54,8 +57,8 @@ const std::map<std::string, Entry>& vocabulary() {
         {"cv_above_terrain", {"Common volume above terrain", "Objętość wspólna nad terenem"}},
         {"cv_slant_a", {"Slant range from A", "Odległość skośna od A"}},
         {"cv_slant_b", {"Slant range from B", "Odległość skośna od B"}},
-        {"direct_blocked", {"Direct path obstructed by terrain/horizon",
-                            "Trasa bezpośrednia zasłonięta przez teren/horyzont"}},
+        {"direct_blocked",
+         {"Direct path obstructed by terrain/horizon", "Trasa bezpośrednia zasłonięta przez teren/horyzont"}},
         {"direct_clear", {"Direct path not obstructed", "Trasa bezpośrednia nie jest zasłonięta"}},
         {"model", {"Model", "Model"}},
         {"median_loss", {"Median loss (dB)", "Strata medianowa (dB)"}},
@@ -104,10 +107,12 @@ const std::map<std::string, Entry>& vocabulary() {
         {"terrain_sources", {"Terrain data sources", "Źródła danych terenowych"}},
         {"provenance_imported", {"imported", "zaimportowane"}},
         {"provenance_downloaded", {"downloaded", "pobrane"}},
-        {"no_terrain", {"NO TERRAIN DATA — smooth-earth estimates",
-                        "BRAK DANYCH TERENOWYCH — oszacowania dla gładkiej Ziemi"}},
-        {"voids_note", {"Profile contains interpolated DEM voids (flagged in the profile view).",
-                        "Profil zawiera interpolowane braki DEM (oznaczone w widoku profilu)."}},
+        {"no_terrain",
+         {"NO TERRAIN DATA — smooth-earth estimates",
+          "BRAK DANYCH TERENOWYCH — oszacowania dla gładkiej Ziemi"}},
+        {"voids_note",
+         {"Profile contains interpolated DEM voids (flagged in the profile view).",
+          "Profil zawiera interpolowane braki DEM (oznaczone w widoku profilu)."}},
         {"app_version", {"TropoLink version", "Wersja TropoLink"}},
         {"gdal_version", {"GDAL version", "Wersja GDAL"}},
         {"geographiclib_version", {"GeographicLib version", "Wersja GeographicLib"}},
@@ -119,8 +124,10 @@ const std::map<std::string, Entry>& vocabulary() {
         {"noise_figure", {"Receiver noise figure", "Współczynnik szumów odbiornika"}},
         {"antenna_diameter", {"Antenna diameter", "Średnica anteny"}},
         {"model_versions", {"Model versions", "Wersje modeli"}},
-        {"fig_map", {"Map with sites, path and common volume", "Mapa ze stanowiskami, trasą i objętością wspólną"}},
-        {"fig_profile", {"Terrain profile with common-volume lens", "Profil terenu z soczewką objętości wspólnej"}},
+        {"fig_map",
+         {"Map with sites, path and common volume", "Mapa ze stanowiskami, trasą i objętością wspólną"}},
+        {"fig_profile",
+         {"Terrain profile with common-volume lens", "Profil terenu z soczewką objętości wspólnej"}},
         {"fig_curve", {"Availability vs. fade margin", "Dostępność w funkcji marginesu zaników"}},
     };
     return table;
@@ -147,7 +154,9 @@ std::string coordRow(const geo::GeoPoint& p, geo::CoordFormat f) {
 
 } // namespace
 
-std::string reportString(const std::string& key, Language language) { return tr(key, language); }
+std::string reportString(const std::string& key, Language language) {
+    return tr(key, language);
+}
 
 std::string ReportContent::canonicalText() const {
     std::ostringstream out;
@@ -178,7 +187,9 @@ std::string ReportContent::canonicalText() const {
     return out.str();
 }
 
-void ReportContent::finalizeHash() { contentSha256 = Sha256::hex(canonicalText()); }
+void ReportContent::finalizeHash() {
+    contentSha256 = Sha256::hex(canonicalText());
+}
 
 ReportContent buildReportContent(const ReportInputs& in, Language lang) {
     ReportContent rc;
@@ -211,9 +222,10 @@ ReportContent buildReportContent(const ReportInputs& in, Language lang) {
         s.key = "sites";
         s.title = tr("sec_sites", lang);
         Table t;
-        t.header = {tr("site", lang), tr("dd", lang), tr("dms", lang), tr("mgrs", lang), tr("utm", lang),
-                    tr("antenna_agl", lang)};
-        for (const auto* site : {in.project.findSite(in.link.siteAId), in.project.findSite(in.link.siteBId)}) {
+        t.header = {tr("site", lang), tr("dd", lang),  tr("dms", lang),
+                    tr("mgrs", lang), tr("utm", lang), tr("antenna_agl", lang)};
+        for (const auto* site :
+             {in.project.findSite(in.link.siteAId), in.project.findSite(in.link.siteBId)}) {
             if (site == nullptr) {
                 continue;
             }
@@ -334,7 +346,8 @@ ReportContent buildReportContent(const ReportInputs& in, Language lang) {
                                    : (lang == Language::Polish ? " (rok)" : " (annual)"))},
             {tr("diversity_gain", lang),
              fmt("%.1f dB",
-                 in.availability.diversityGain(in.link.targetAvailability, in.link.diversity, worstMonthTarget)
+                 in.availability
+                     .diversityGain(in.link.targetAvailability, in.link.diversity, worstMonthTarget)
                      .value())},
             {tr("sep_h", lang), fmt("%.1f m", in.separation.horizontal.value())},
             {tr("sep_v", lang), fmt("%.1f m", in.separation.vertical.value())},
@@ -354,9 +367,8 @@ ReportContent buildReportContent(const ReportInputs& in, Language lang) {
         t.header = {tr("item", lang), tr("value", lang)};
         t.rows = {
             {tr("frequency", lang), fmt("%.4f GHz", in.link.frequency.gigahertz())},
-            {tr("tx_power", lang),
-             fmt("%.1f dBm", in.link.radio.txPower.value()) + " (" +
-                 fmt("%.0f W", in.link.radio.txPower.watts()) + ")"},
+            {tr("tx_power", lang), fmt("%.1f dBm", in.link.radio.txPower.value()) + " (" +
+                                       fmt("%.0f W", in.link.radio.txPower.watts()) + ")"},
             {tr("antenna_gain_tx", lang), fmt("%.1f dBi", in.link.radio.antennaGainA.value())},
             {tr("antenna_gain_rx", lang), fmt("%.1f dBi", in.link.radio.antennaGainB.value())},
             {tr("antenna_diameter", lang), fmt("%.1f m", in.link.antennaDiameter.value())},

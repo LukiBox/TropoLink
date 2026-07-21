@@ -38,7 +38,7 @@ struct ElevationSample {
 };
 
 class DemDataset {
-public:
+  public:
     ~DemDataset();
     DemDataset(DemDataset&&) noexcept;
     DemDataset& operator=(DemDataset&&) noexcept;
@@ -57,7 +57,7 @@ public:
     // isVoid = true when inside coverage but NODATA.
     [[nodiscard]] std::optional<ElevationSample> sample(const geo::GeoPoint& p) const;
 
-private:
+  private:
     DemDataset() = default;
 
     GDALDataset* dataset_ = nullptr;

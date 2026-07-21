@@ -24,7 +24,7 @@ namespace tl::ai {
 namespace {
 
 class Socket {
-public:
+  public:
     Socket() {
 #ifdef _WIN32
         WSADATA data;
@@ -107,7 +107,7 @@ public:
         }
     }
 
-private:
+  private:
     SocketHandle handle_ = INVALID_SOCKET;
 #ifdef _WIN32
     bool wsaOk_ = false;
@@ -152,8 +152,8 @@ Expected<std::string> generateCommentary(const OllamaRequest& request) {
     if (firstBrace == std::string::npos || lastBrace == std::string::npos || lastBrace < firstBrace) {
         return Error{"no JSON payload in the Ollama response"};
     }
-    nlohmann::json doc = nlohmann::json::parse(bodyPart.substr(firstBrace, lastBrace - firstBrace + 1),
-                                               nullptr, false);
+    nlohmann::json doc =
+        nlohmann::json::parse(bodyPart.substr(firstBrace, lastBrace - firstBrace + 1), nullptr, false);
     if (doc.is_discarded() || !doc.contains("response")) {
         return Error{"unexpected Ollama response format"};
     }

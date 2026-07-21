@@ -20,7 +20,7 @@
 namespace tl {
 
 class Meters {
-public:
+  public:
     constexpr Meters() = default;
     constexpr explicit Meters(double metres) : v_(metres) {}
     [[nodiscard]] static constexpr Meters fromKilometers(double km) { return Meters(km * 1000.0); }
@@ -33,18 +33,24 @@ public:
     friend constexpr Meters operator/(Meters a, double s) { return Meters(a.v_ / s); }
     friend constexpr double operator/(Meters a, Meters b) { return a.v_ / b.v_; }
     friend constexpr Meters operator-(Meters a) { return Meters(-a.v_); }
-    constexpr Meters& operator+=(Meters o) { v_ += o.v_; return *this; }
-    constexpr Meters& operator-=(Meters o) { v_ -= o.v_; return *this; }
+    constexpr Meters& operator+=(Meters o) {
+        v_ += o.v_;
+        return *this;
+    }
+    constexpr Meters& operator-=(Meters o) {
+        v_ -= o.v_;
+        return *this;
+    }
     friend constexpr auto operator<=>(Meters, Meters) = default;
 
-private:
+  private:
     double v_ = 0.0;
 };
 
 class Degrees; // forward
 
 class Radians {
-public:
+  public:
     constexpr Radians() = default;
     constexpr explicit Radians(double rad) : v_(rad) {}
     [[nodiscard]] static constexpr Radians fromMilliradians(double mrad) { return Radians(mrad / 1000.0); }
@@ -61,17 +67,20 @@ public:
     friend constexpr Radians operator/(Radians a, double s) { return Radians(a.v_ / s); }
     friend constexpr double operator/(Radians a, Radians b) { return a.v_ / b.v_; }
     friend constexpr Radians operator-(Radians a) { return Radians(-a.v_); }
-    constexpr Radians& operator+=(Radians o) { v_ += o.v_; return *this; }
+    constexpr Radians& operator+=(Radians o) {
+        v_ += o.v_;
+        return *this;
+    }
     friend constexpr auto operator<=>(Radians, Radians) = default;
 
-private:
+  private:
     double v_ = 0.0;
 };
 
 // Geographic angle in degrees (latitude, longitude, azimuth). Distinct from Radians so
 // a latitude cannot be fed where a radian-valued scatter angle is expected.
 class Degrees {
-public:
+  public:
     constexpr Degrees() = default;
     constexpr explicit Degrees(double deg) : v_(deg) {}
     [[nodiscard]] constexpr double value() const { return v_; }
@@ -82,12 +91,12 @@ public:
     friend constexpr Degrees operator-(Degrees a) { return Degrees(-a.v_); }
     friend constexpr auto operator<=>(Degrees, Degrees) = default;
 
-private:
+  private:
     double v_ = 0.0;
 };
 
 class Hertz {
-public:
+  public:
     constexpr Hertz() = default;
     constexpr explicit Hertz(double hz) : v_(hz) {}
     [[nodiscard]] static constexpr Hertz fromMegahertz(double mhz) { return Hertz(mhz * 1.0e6); }
@@ -102,12 +111,12 @@ public:
     friend constexpr double operator/(Hertz a, Hertz b) { return a.v_ / b.v_; }
     friend constexpr auto operator<=>(Hertz, Hertz) = default;
 
-private:
+  private:
     double v_ = 0.0;
 };
 
 class BitsPerSecond {
-public:
+  public:
     constexpr BitsPerSecond() = default;
     constexpr explicit BitsPerSecond(double bps) : v_(bps) {}
     [[nodiscard]] static constexpr BitsPerSecond fromMegabits(double mbps) {
@@ -119,24 +128,24 @@ public:
     friend constexpr double operator/(BitsPerSecond a, BitsPerSecond b) { return a.v_ / b.v_; }
     friend constexpr auto operator<=>(BitsPerSecond, BitsPerSecond) = default;
 
-private:
+  private:
     double v_ = 0.0;
 };
 
 class Kelvin {
-public:
+  public:
     constexpr Kelvin() = default;
     constexpr explicit Kelvin(double k) : v_(k) {}
     [[nodiscard]] constexpr double value() const { return v_; }
     friend constexpr auto operator<=>(Kelvin, Kelvin) = default;
 
-private:
+  private:
     double v_ = 0.0;
 };
 
 // Relative decibels: gains, losses, margins, level differences.
 class Decibels {
-public:
+  public:
     constexpr Decibels() = default;
     constexpr explicit Decibels(double db) : v_(db) {}
     [[nodiscard]] constexpr double value() const { return v_; }
@@ -146,31 +155,37 @@ public:
     friend constexpr Decibels operator*(double s, Decibels a) { return Decibels(a.v_ * s); }
     friend constexpr Decibels operator/(Decibels a, double s) { return Decibels(a.v_ / s); }
     friend constexpr Decibels operator-(Decibels a) { return Decibels(-a.v_); }
-    constexpr Decibels& operator+=(Decibels o) { v_ += o.v_; return *this; }
-    constexpr Decibels& operator-=(Decibels o) { v_ -= o.v_; return *this; }
+    constexpr Decibels& operator+=(Decibels o) {
+        v_ += o.v_;
+        return *this;
+    }
+    constexpr Decibels& operator-=(Decibels o) {
+        v_ -= o.v_;
+        return *this;
+    }
     friend constexpr auto operator<=>(Decibels, Decibels) = default;
 
-private:
+  private:
     double v_ = 0.0;
 };
 
 // Antenna gain relative to isotropic. Not interchangeable with plain Decibels:
 // converting is an explicit, visible step.
 class Dbi {
-public:
+  public:
     constexpr Dbi() = default;
     constexpr explicit Dbi(double dbi) : v_(dbi) {}
     [[nodiscard]] constexpr double value() const { return v_; }
     [[nodiscard]] constexpr Decibels asDecibels() const { return Decibels(v_); }
     friend constexpr auto operator<=>(Dbi, Dbi) = default;
 
-private:
+  private:
     double v_ = 0.0;
 };
 
 // Absolute power level in dB relative to 1 mW.
 class Dbm {
-public:
+  public:
     constexpr Dbm() = default;
     constexpr explicit Dbm(double dbm) : v_(dbm) {}
     [[nodiscard]] constexpr double value() const { return v_; }
@@ -185,12 +200,12 @@ public:
     friend Dbm operator+(Dbm, Dbm) = delete;
     friend constexpr auto operator<=>(Dbm, Dbm) = default;
 
-private:
+  private:
     double v_ = 0.0;
 };
 
 class Watts {
-public:
+  public:
     constexpr Watts() = default;
     constexpr explicit Watts(double w) : v_(w) {}
     [[nodiscard]] constexpr double value() const { return v_; }
@@ -199,45 +214,85 @@ public:
     friend constexpr Watts operator*(Watts a, double s) { return Watts(a.v_ * s); }
     friend constexpr auto operator<=>(Watts, Watts) = default;
 
-private:
+  private:
     double v_ = 0.0;
 };
 
 class Percent {
-public:
+  public:
     constexpr Percent() = default;
     constexpr explicit Percent(double pct) : v_(pct) {}
     [[nodiscard]] constexpr double value() const { return v_; }
     [[nodiscard]] constexpr double fraction() const { return v_ / 100.0; }
     friend constexpr auto operator<=>(Percent, Percent) = default;
 
-private:
+  private:
     double v_ = 0.0;
 };
 
 // ---- literals ------------------------------------------------------------
 
 namespace literals {
-constexpr Meters operator""_m(long double v) { return Meters(static_cast<double>(v)); }
-constexpr Meters operator""_m(unsigned long long v) { return Meters(static_cast<double>(v)); }
-constexpr Meters operator""_km(long double v) { return Meters::fromKilometers(static_cast<double>(v)); }
-constexpr Meters operator""_km(unsigned long long v) { return Meters::fromKilometers(static_cast<double>(v)); }
-constexpr Degrees operator""_deg(long double v) { return Degrees(static_cast<double>(v)); }
-constexpr Degrees operator""_deg(unsigned long long v) { return Degrees(static_cast<double>(v)); }
-constexpr Radians operator""_mrad(long double v) { return Radians::fromMilliradians(static_cast<double>(v)); }
-constexpr Hertz operator""_MHz(long double v) { return Hertz::fromMegahertz(static_cast<double>(v)); }
-constexpr Hertz operator""_MHz(unsigned long long v) { return Hertz::fromMegahertz(static_cast<double>(v)); }
-constexpr Hertz operator""_GHz(long double v) { return Hertz::fromGigahertz(static_cast<double>(v)); }
-constexpr Hertz operator""_GHz(unsigned long long v) { return Hertz::fromGigahertz(static_cast<double>(v)); }
-constexpr Decibels operator""_dB(long double v) { return Decibels(static_cast<double>(v)); }
-constexpr Decibels operator""_dB(unsigned long long v) { return Decibels(static_cast<double>(v)); }
-constexpr Dbm operator""_dBm(long double v) { return Dbm(static_cast<double>(v)); }
-constexpr Dbm operator""_dBm(unsigned long long v) { return Dbm(static_cast<double>(v)); }
-constexpr Dbi operator""_dBi(long double v) { return Dbi(static_cast<double>(v)); }
-constexpr Dbi operator""_dBi(unsigned long long v) { return Dbi(static_cast<double>(v)); }
-constexpr Watts operator""_W(long double v) { return Watts(static_cast<double>(v)); }
-constexpr Watts operator""_W(unsigned long long v) { return Watts(static_cast<double>(v)); }
-constexpr Percent operator""_pct(long double v) { return Percent(static_cast<double>(v)); }
+constexpr Meters operator""_m(long double v) {
+    return Meters(static_cast<double>(v));
+}
+constexpr Meters operator""_m(unsigned long long v) {
+    return Meters(static_cast<double>(v));
+}
+constexpr Meters operator""_km(long double v) {
+    return Meters::fromKilometers(static_cast<double>(v));
+}
+constexpr Meters operator""_km(unsigned long long v) {
+    return Meters::fromKilometers(static_cast<double>(v));
+}
+constexpr Degrees operator""_deg(long double v) {
+    return Degrees(static_cast<double>(v));
+}
+constexpr Degrees operator""_deg(unsigned long long v) {
+    return Degrees(static_cast<double>(v));
+}
+constexpr Radians operator""_mrad(long double v) {
+    return Radians::fromMilliradians(static_cast<double>(v));
+}
+constexpr Hertz operator""_MHz(long double v) {
+    return Hertz::fromMegahertz(static_cast<double>(v));
+}
+constexpr Hertz operator""_MHz(unsigned long long v) {
+    return Hertz::fromMegahertz(static_cast<double>(v));
+}
+constexpr Hertz operator""_GHz(long double v) {
+    return Hertz::fromGigahertz(static_cast<double>(v));
+}
+constexpr Hertz operator""_GHz(unsigned long long v) {
+    return Hertz::fromGigahertz(static_cast<double>(v));
+}
+constexpr Decibels operator""_dB(long double v) {
+    return Decibels(static_cast<double>(v));
+}
+constexpr Decibels operator""_dB(unsigned long long v) {
+    return Decibels(static_cast<double>(v));
+}
+constexpr Dbm operator""_dBm(long double v) {
+    return Dbm(static_cast<double>(v));
+}
+constexpr Dbm operator""_dBm(unsigned long long v) {
+    return Dbm(static_cast<double>(v));
+}
+constexpr Dbi operator""_dBi(long double v) {
+    return Dbi(static_cast<double>(v));
+}
+constexpr Dbi operator""_dBi(unsigned long long v) {
+    return Dbi(static_cast<double>(v));
+}
+constexpr Watts operator""_W(long double v) {
+    return Watts(static_cast<double>(v));
+}
+constexpr Watts operator""_W(unsigned long long v) {
+    return Watts(static_cast<double>(v));
+}
+constexpr Percent operator""_pct(long double v) {
+    return Percent(static_cast<double>(v));
+}
 } // namespace literals
 
 } // namespace tl

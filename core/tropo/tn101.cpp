@@ -77,8 +77,8 @@ Tn101Model::Tn101Model(const Tn101Params& params) : params_(params) {
     // theta_los = -(theta_t + theta_r) makes the internal angular distance equal theta.
     double h0Cache = -1.0; // <0: no cached H0, compute fresh (see TroposcatterLoss)
     const double thetaLos = -(thetaHzn[0] + thetaHzn[1]);
-    const double aScat = TroposcatterLoss(dM, thetaHzn, dHzn, heMeters_, aE,
-                                          params.surfaceRefractivityNs, fMhz, thetaLos, &h0Cache);
+    const double aScat = TroposcatterLoss(dM, thetaHzn, dHzn, heMeters_, aE, params.surfaceRefractivityNs,
+                                          fMhz, thetaLos, &h0Cache);
     // Crossover height for provenance display [Algorithm 4.66; TN101v1 9.3b].
     const double ad = std::abs(dHzn[0] - dHzn[1]);
     crossoverHeightM_ = (dM - ad) * (dM + ad) * theta * 0.25 / std::max(dM, 1.0);
@@ -105,8 +105,8 @@ Decibels Tn101Model::lossNotExceededAnnual(double percent) const {
     // an engineered point-to-point link keeps only the time distribution
     // [TN101 Ch. 10; Algorithm §5].
     long warnings = 0;
-    const double a = Variability(p, 50.0, 50.0, heMeters_, params_.terrainIrregularityDeltaH.value(),
-                                 fMhz, dM, referenceAttenuation_, params_.climate, 13, &warnings);
+    const double a = Variability(p, 50.0, 50.0, heMeters_, params_.terrainIrregularityDeltaH.value(), fMhz,
+                                 dM, referenceAttenuation_, params_.climate, 13, &warnings);
     return freeSpacePathLoss(params_.frequency, params_.pathLength) + Decibels(a);
 }
 

@@ -23,7 +23,9 @@ DemDataset::~DemDataset() {
     }
 }
 
-DemDataset::DemDataset(DemDataset&& other) noexcept { *this = std::move(other); }
+DemDataset::DemDataset(DemDataset&& other) noexcept {
+    *this = std::move(other);
+}
 
 DemDataset& DemDataset::operator=(DemDataset&& other) noexcept {
     if (this != &other) {
@@ -151,8 +153,8 @@ std::optional<ElevationSample> DemDataset::sample(const geo::GeoPoint& p) const 
         return ElevationSample{Meters(0.0), true};
     }
     // Partial void: use the nearest valid neighbour rather than inventing a blend.
-    const double dist[4] = {fx * fx + fy * fy, (1 - fx) * (1 - fx) + fy * fy,
-                            fx * fx + (1 - fy) * (1 - fy), (1 - fx) * (1 - fx) + (1 - fy) * (1 - fy)};
+    const double dist[4] = {fx * fx + fy * fy, (1 - fx) * (1 - fx) + fy * fy, fx * fx + (1 - fy) * (1 - fy),
+                            (1 - fx) * (1 - fx) + (1 - fy) * (1 - fy)};
     // Index into quad by proximity: quad[0] is (x0,y0) so its distance is fx,fy from that corner.
     int best = -1;
     double bestDist = 1e9;

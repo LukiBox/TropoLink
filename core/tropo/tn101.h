@@ -47,7 +47,7 @@ struct Tn101Params {
 [[nodiscard]] Meters interdecileDeltaH(const terrain::Profile& profile);
 
 class Tn101Model final : public LossModel {
-public:
+  public:
     explicit Tn101Model(const Tn101Params& params);
 
     [[nodiscard]] ModelId id() const override { return ModelId::Tn101; }
@@ -63,7 +63,7 @@ public:
     [[nodiscard]] Decibels atmosphericAbsorption() const { return absorption_; }
     [[nodiscard]] Meters crossoverHeight() const { return Meters(crossoverHeightM_); }
 
-private:
+  private:
     Tn101Params params_;
     Validity validity_;
     Decibels couplingLoss_{0.0};

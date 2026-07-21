@@ -10,7 +10,7 @@
 namespace tl {
 
 class Fnv1a {
-public:
+  public:
     void update(std::string_view text) {
         for (const char c : text) {
             state_ ^= static_cast<std::uint8_t>(c);
@@ -19,7 +19,7 @@ public:
     }
     [[nodiscard]] std::uint64_t digest() const { return state_; }
 
-private:
+  private:
     std::uint64_t state_ = 0xcbf29ce484222325ULL;
 };
 

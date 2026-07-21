@@ -65,8 +65,7 @@ Expected<Profile> extractProfile(const TerrainStore& store, const ProfileRequest
     // 120 ms cadence). The step widens instead; the cap still leaves <70 m posts at
     // 1000 km, finer than any global DEM's information content over such paths.
     constexpr int kMaxSamples = 16384;
-    int sampleCount =
-        std::max(2, static_cast<int>(std::ceil(inverse.distance.value() / step.value())) + 1);
+    int sampleCount = std::max(2, static_cast<int>(std::ceil(inverse.distance.value() / step.value())) + 1);
     if (sampleCount > kMaxSamples) {
         sampleCount = kMaxSamples;
         step = Meters(inverse.distance.value() / (kMaxSamples - 1));
@@ -79,8 +78,7 @@ Expected<Profile> extractProfile(const TerrainStore& store, const ProfileRequest
     profile.points.resize(line.size());
 
     // Parallel sampling: fixed slot per index -> deterministic output.
-    const unsigned workerCount =
-        std::min<unsigned>(std::max(1U, std::thread::hardware_concurrency()), 16U);
+    const unsigned workerCount = std::min<unsigned>(std::max(1U, std::thread::hardware_concurrency()), 16U);
     std::atomic<int> nextChunk{0};
     std::atomic<int> done{0};
     std::atomic<bool> cancelled{false};
@@ -133,9 +131,8 @@ Expected<Profile> extractProfile(const TerrainStore& store, const ProfileRequest
     // Coverage check and void interpolation. A point is a true DEM void (or gap) when
     // flagged above; we interpolate linearly between the nearest valid neighbours and
     // keep the flag so the UI can mark it.
-    const auto validCount =
-        std::count_if(profile.points.begin(), profile.points.end(),
-                      [](const ProfilePoint& p) { return !p.interpolatedVoid; });
+    const auto validCount = std::count_if(profile.points.begin(), profile.points.end(),
+                                          [](const ProfilePoint& p) { return !p.interpolatedVoid; });
     profile.hasCoverage = validCount > 0;
     if (!profile.hasCoverage) {
         profile.hasVoids = true;
@@ -157,13 +154,13 @@ Expected<Profile> extractProfile(const TerrainStore& store, const ProfileRequest
         const int gapEnd = i; // one past
         const int left = gapBegin - 1;
         const int right = gapEnd; // valid or n
-        const double leftElev =
-            left >= 0 ? profile.points[static_cast<std::size_t>(left)].elevation.value()
-                      : profile.points[static_cast<std::size_t>(right)].elevation.value();
+        const double leftElev = left >= 0 ? profile.points[static_cast<std::size_t>(left)].elevation.value()
+                                          : profile.points[static_cast<std::size_t>(right)].elevation.value();
         const double rightElev =
             right < n ? profile.points[static_cast<std::size_t>(right)].elevation.value() : leftElev;
-        const double leftDist = left >= 0 ? profile.points[static_cast<std::size_t>(left)].distance.value()
-                                          : profile.points[static_cast<std::size_t>(gapBegin)].distance.value();
+        const double leftDist = left >= 0
+                                    ? profile.points[static_cast<std::size_t>(left)].distance.value()
+                                    : profile.points[static_cast<std::size_t>(gapBegin)].distance.value();
         const double rightDist = right < n
                                      ? profile.points[static_cast<std::size_t>(right)].distance.value()
                                      : profile.points[static_cast<std::size_t>(gapEnd - 1)].distance.value();

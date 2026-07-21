@@ -19,14 +19,14 @@ struct ItmParams {
     Dbi gainA{};
     Dbi gainB{};
     double seaLevelN0 = 315.0;
-    int climate = 5;              // ITM climate code
-    int polarization = 1;         // 0 horizontal, 1 vertical
-    double groundEpsilon = 15.0;  // average ground
+    int climate = 5;             // ITM climate code
+    int polarization = 1;        // 0 horizontal, 1 vertical
+    double groundEpsilon = 15.0; // average ground
     double groundSigma = 0.005;
 };
 
 class ItmModel final : public LossModel {
-public:
+  public:
     ItmModel(const terrain::Profile& profile, const ItmParams& params);
 
     [[nodiscard]] ModelId id() const override { return ModelId::Itm; }
@@ -42,7 +42,7 @@ public:
     // Propagation mode ITM selected at the median (LOS / diffraction / troposcatter).
     [[nodiscard]] const std::string& propagationMode() const { return mode_; }
 
-private:
+  private:
     ItmParams params_;
     std::vector<double> pfl_; // [n-1, step_m, elevations...]
     Validity validity_;

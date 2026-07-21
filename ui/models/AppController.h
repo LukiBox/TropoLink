@@ -77,7 +77,8 @@ class AppController : public QObject {
     // Availability / diversity / model
     Q_PROPERTY(int diversityIndex READ diversityIndex WRITE setDiversityIndex NOTIFY targetChanged)
     Q_PROPERTY(int primaryModelIndex READ primaryModelIndex WRITE setPrimaryModelIndex NOTIFY targetChanged)
-    Q_PROPERTY(double targetAvailability READ targetAvailability WRITE setTargetAvailability NOTIFY targetChanged)
+    Q_PROPERTY(
+        double targetAvailability READ targetAvailability WRITE setTargetAvailability NOTIFY targetChanged)
     Q_PROPERTY(bool targetWorstMonth READ targetWorstMonth WRITE setTargetWorstMonth NOTIFY targetChanged)
     // Results
     Q_PROPERTY(QVariantMap geometry READ geometry NOTIFY resultsChanged)
@@ -110,15 +111,17 @@ class AppController : public QObject {
     Q_PROPERTY(bool darkTheme READ darkTheme WRITE setDarkTheme NOTIFY themeChanged)
     Q_PROPERTY(QVariantList terrainEntries READ terrainEntries NOTIFY terrainChanged)
     Q_PROPERTY(QString statusMessage READ statusMessage NOTIFY statusMessageChanged)
-    Q_PROPERTY(bool aiCommentaryEnabled READ aiCommentaryEnabled WRITE setAiCommentaryEnabled NOTIFY targetChanged)
+    Q_PROPERTY(
+        bool aiCommentaryEnabled READ aiCommentaryEnabled WRITE setAiCommentaryEnabled NOTIFY targetChanged)
     Q_PROPERTY(bool downloading READ downloading NOTIFY downloadingChanged)
     Q_PROPERTY(QStringList antennaPresets READ antennaPresets CONSTANT)
     Q_PROPERTY(QStringList radioPresets READ radioPresets CONSTANT)
     // Persisted map-source choice ("": offline terrain rendering).
-    Q_PROPERTY(QString mapOnlineSource READ mapOnlineSource WRITE setMapOnlineSource NOTIFY mapSettingsChanged)
+    Q_PROPERTY(
+        QString mapOnlineSource READ mapOnlineSource WRITE setMapOnlineSource NOTIFY mapSettingsChanged)
     Q_PROPERTY(QString mapBasemapPath READ mapBasemapPath WRITE setMapBasemapPath NOTIFY mapSettingsChanged)
 
-public:
+  public:
     explicit AppController(QObject* parent = nullptr);
     ~AppController() override;
 
@@ -264,7 +267,7 @@ public:
     }
     bool downloading() const { return downloading_; }
 
-signals:
+  signals:
     void sitesChanged();
     void radioChanged();
     void atmosphereChanged();
@@ -279,7 +282,7 @@ signals:
     void downloadingChanged();
     void mapSettingsChanged();
 
-private:
+  private:
     struct LinkState {
         tl::geo::GeoPoint siteA{tl::Degrees(51.50609699), tl::Degrees(15.33150851)};
         tl::geo::GeoPoint siteB{tl::Degrees(52.43470597), tl::Degrees(15.21931198)};

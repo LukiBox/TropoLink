@@ -23,8 +23,8 @@ namespace tl::terrain {
 enum class Provenance { Imported, Downloaded };
 
 struct StoreEntry {
-    std::string fileName;   // relative to store directory
-    std::string format;     // GDAL driver name (DTED, SRTMHGT, GTiff, ...)
+    std::string fileName; // relative to store directory
+    std::string format;   // GDAL driver name (DTED, SRTMHGT, GTiff, ...)
     Provenance provenance = Provenance::Imported;
     BoundingBox bounds;
     double resolutionM = 90.0;
@@ -32,7 +32,7 @@ struct StoreEntry {
 };
 
 class TerrainStore {
-public:
+  public:
     // Opens (creating if needed) a store rooted at the given directory (UTF-8 path).
     [[nodiscard]] static Expected<std::unique_ptr<TerrainStore>> open(const std::string& directory);
 
@@ -52,7 +52,7 @@ public:
     // Monotonic revision, bumped on every import/remove; lets caches invalidate.
     [[nodiscard]] std::uint64_t revision() const { return revision_; }
 
-private:
+  private:
     explicit TerrainStore(std::string directory) : directory_(std::move(directory)) {}
     [[nodiscard]] Status loadIndex();
     [[nodiscard]] Status saveIndex() const;

@@ -30,13 +30,16 @@ std::string toUpper(std::string s) {
     return s;
 }
 
-bool validLatLon(double lat, double lon) { return lat >= -90.0 && lat <= 90.0 && lon >= -180.0 && lon <= 180.0; }
+bool validLatLon(double lat, double lon) {
+    return lat >= -90.0 && lat <= 90.0 && lon >= -180.0 && lon <= 180.0;
+}
 
 // --- MGRS ------------------------------------------------------------------
 
 std::optional<GeoPoint> tryParseMgrs(const std::string& raw) {
     std::string s = toUpper(raw);
-    s.erase(std::remove_if(s.begin(), s.end(), [](unsigned char c) { return std::isspace(c) != 0; }), s.end());
+    s.erase(std::remove_if(s.begin(), s.end(), [](unsigned char c) { return std::isspace(c) != 0; }),
+            s.end());
     // Grid-zone designator + 100 km square + even number of digits, e.g. 33UXT6605507249.
     static const std::regex mgrsRe(R"(^\d{1,2}[C-HJ-NP-X][A-HJ-NP-Z]{2}(\d{0,10})$)");
     std::smatch m;
@@ -124,7 +127,7 @@ std::optional<ParsedAngle> parseAngle(std::string text) {
     }
 
     // Normalize unicode degree sign and prime characters to plain separators.
-    static const std::array<std::pair<const char*, char>, 6> replacements{{{"\xC2\xB0", ' '},  // °
+    static const std::array<std::pair<const char*, char>, 6> replacements{{{"\xC2\xB0", ' '},     // °
                                                                            {"\xE2\x80\xB2", ' '}, // ′
                                                                            {"\xE2\x80\xB3", ' '}, // ″
                                                                            {"\xE2\x80\x99", ' '}, // ’

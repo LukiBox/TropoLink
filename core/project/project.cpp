@@ -37,7 +37,9 @@ Site siteFromJson(const json& j) {
     return s;
 }
 
-const char* diversityKey(budget::DiversityMode m) { return budget::diversityName(m); }
+const char* diversityKey(budget::DiversityMode m) {
+    return budget::diversityName(m);
+}
 
 budget::DiversityMode diversityFromKey(const std::string& k) {
     if (k == "space") {

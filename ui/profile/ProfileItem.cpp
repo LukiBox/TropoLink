@@ -61,14 +61,16 @@ QSGGeometry* lineStrip(const QVector<QPointF>& points, float widthPx) {
 
 } // namespace
 
-ProfileItem::ProfileItem(QQuickItem* parent) : QQuickItem(parent) { setFlag(ItemHasContents, true); }
+ProfileItem::ProfileItem(QQuickItem* parent) : QQuickItem(parent) {
+    setFlag(ItemHasContents, true);
+}
 
-#define TL_SETTER(name, member)                                                                            \
-    void ProfileItem::name(const QPolygonF& v) {                                                           \
-        member = v;                                                                                        \
-        computeViewport();                                                                                 \
-        emit dataChanged();                                                                                \
-        update();                                                                                          \
+#define TL_SETTER(name, member)                                                                              \
+    void ProfileItem::name(const QPolygonF& v) {                                                             \
+        member = v;                                                                                          \
+        computeViewport();                                                                                   \
+        emit dataChanged();                                                                                  \
+        update();                                                                                            \
     }
 TL_SETTER(setTerrain, terrain_)
 TL_SETTER(setRayA, rayA_)

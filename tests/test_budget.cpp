@@ -107,8 +107,7 @@ TEST(AutoDesign, ProducesAFeasibleDesignAndExplainsIt) {
     c.dataRate = BitsPerSecond::fromMegabits(2.0);
 
     const auto lib = ModulationLibrary::builtIn();
-    const auto result =
-        autoDesign(g, atm, lib, referenceRadio(), 4.4_GHz, 3.0_m, c);
+    const auto result = autoDesign(g, atm, lib, referenceRadio(), 4.4_GHz, 3.0_m, c);
 
     ASSERT_TRUE(result.feasible);
     EXPECT_EQ(result.noteKey, "auto_ok");
@@ -272,8 +271,7 @@ TEST(Budget, SolverGainAccountsForCouplingLoss) {
         const double dG = result.requiredAntennaGain->value() - g0;
         const auto budget = computeLinkBudget(radio, model.medianLoss());
         const auto lc = [](double g) { return 0.07 * std::exp(0.055 * 2.0 * g); };
-        const double margin = budget.fadeMargin.value() + 2.0 * dG -
-                              (lc(g0 + dG) - lc(g0));
+        const double margin = budget.fadeMargin.value() + 2.0 * dG - (lc(g0 + dG) - lc(g0));
         EXPECT_NEAR(margin, result.requiredMedianMargin.value(), 1e-4);
     }
 }

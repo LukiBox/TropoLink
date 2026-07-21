@@ -43,9 +43,14 @@ TEST(Sha256, KnownVectors) {
 
 TEST(Project, TlkRoundTripLossless) {
     Project original = referenceProject();
-    original.snapshots.push_back(ResultSnapshot{
-        "link-1", "2026-07-18T12:00:00Z", "1.0.0", "3.9", "2.3", {{"P.617", "P.617-5"}},
-        {{"distance_km", 103.5}, {"median_db", 210.7}}, "deadbeef"});
+    original.snapshots.push_back(ResultSnapshot{"link-1",
+                                                "2026-07-18T12:00:00Z",
+                                                "1.0.0",
+                                                "3.9",
+                                                "2.3",
+                                                {{"P.617", "P.617-5"}},
+                                                {{"distance_km", 103.5}, {"median_db", 210.7}},
+                                                "deadbeef"});
 
     std::string stage = "serialize";
     try {
@@ -123,8 +128,7 @@ TEST(Report, ContentHashDeterministic) {
                                 engine,
                                 engine.availability(budget.fadeMargin, p.links[0].diversity, false),
                                 engine.availability(budget.fadeMargin, p.links[0].diversity, true),
-                                budget::diversitySeparation(p.links[0].antennaDiameter,
-                                                            p.links[0].frequency,
+                                budget::diversitySeparation(p.links[0].antennaDiameter, p.links[0].frequency,
                                                             suite.geometry.scatterAngle,
                                                             suite.inverse.distance),
                                 {},

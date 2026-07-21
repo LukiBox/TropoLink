@@ -35,12 +35,12 @@ struct AutoDesignConstraints {
     bool worstMonth = false;
     DiversityMode diversity = DiversityMode::Quad;
     BitsPerSecond dataRate = BitsPerSecond::fromMegabits(2.0);
-    Dbm maxTxPower{60.0};              // 1 kW: a realistic tactical SSPA ceiling
+    Dbm maxTxPower{60.0}; // 1 kW: a realistic tactical SSPA ceiling
     Meters maxAntennaDiameter{4.6};
     Decibels lineLossA{0.5};
     Decibels lineLossB{0.5};
     Decibels noiseFigure{4.0};
-    double apertureEfficiency = 0.55;  // typical prime-focus troposcatter dish
+    double apertureEfficiency = 0.55; // typical prime-focus troposcatter dish
     // Headroom added on top of the availability requirement, so the delivered design
     // is not sitting exactly on its threshold.
     Decibels designHeadroom{3.0};
@@ -49,8 +49,8 @@ struct AutoDesignConstraints {
 // One field the solver decided to change, with the reason as a stable key the UI
 // and report translate (never English prose baked into the core).
 struct AutoDesignChange {
-    std::string field;     // "frequency" | "diameter" | "gain" | "txPower" | "modulation"
-    std::string oldValue;  // preformatted for display
+    std::string field;    // "frequency" | "diameter" | "gain" | "txPower" | "modulation"
+    std::string oldValue; // preformatted for display
     std::string newValue;
     std::string reasonKey; // "reason_freq_gain" | "reason_coupling_optimum" | ...
 };
@@ -97,8 +97,7 @@ struct AutoDesignGeometry {
 // Runs the search over candidate frequencies, dish diameters and modulations.
 [[nodiscard]] AutoDesignResult autoDesign(const AutoDesignGeometry& geometry,
                                           const geo::Atmosphere& atmosphere,
-                                          const ModulationLibrary& modulations,
-                                          const RadioParams& current,
+                                          const ModulationLibrary& modulations, const RadioParams& current,
                                           Hertz currentFrequency, Meters currentDiameter,
                                           const AutoDesignConstraints& constraints);
 
