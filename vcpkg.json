@@ -2,6 +2,7 @@
   "name": "tropolink",
   "version": "1.0.0",
   "description": "TropoLink - troposcatter link design tool",
+  "builtin-baseline": "4e82e29f14eac2b3422f18f72c7524d04f19924e",
   "dependencies": [
     {
       "name": "gdal",
