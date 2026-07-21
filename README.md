@@ -2,19 +2,16 @@
 
 **Made by [LukiBox](https://github.com/LukiBox)** · Apache-2.0
 
-A professional desktop instrument for the design of **troposcatter (tropospheric
-scatter) radio links**. Drop two pins on an offline map (or type DD / DMS / MGRS /
-UTM), enter the radio parameters, and receive a complete, defensible link design:
+A professional desktop instrument for the design of troposcatter radio links. Drop two pins on an offline map, enter the radio parameters, and receive a complete, defensible link design:
 path geometry over real terrain, common-volume geometry, free-space and troposcatter
-losses from **multiple published models side by side**, full link budget, fade
-margin, diversity gain, predicted availability — finished with a formal bilingual
-(PL/EN) PDF link-design report carrying a reproducible SHA-256 content hash.
+losses from multiple published models side by side, full link budget, fade
+margin, diversity gain, predicted availability.
 
-Where models disagree — and troposcatter models famously disagree by several dB —
+Where models disagree, and troposcatter models famously disagree by several dB,
 TropoLink shows the disagreement honestly as the design uncertainty instead of
 hiding it behind one figure.
 
-**Fully offline.** No telemetry, no phone-home, ever. An Air-Gap build flavor
+Fully offline. No telemetry, no phone-home, ever. An Air-Gap build flavor
 compiles the optional SRTM downloader and local-AI commentary out entirely.
 
 ## Models
@@ -27,13 +24,11 @@ compiles the optional SRTM downloader and local-AI commentary out entirely.
 | **ITM (Longley-Rice)** | independent cross-check | official NTIA public-domain C++, P2P mode over the real profile |
 
 Aperture-to-medium coupling loss (P.617-5 eq. 3) is applied explicitly and shown as
-its own line. Validity envelopes are enforced: outside its envelope a model says
-*out of validity range* rather than extrapolating. Every displayed value carries its
-formula/source on hover; `docs/model_references.md` cites every equation.
+its own line.
 
 ## Maps
 
-Three basemap layers, chosen from the **Basemap** selector on the map bar. Whatever
+Three basemap layers, chosen from the basemap selector on the map bar. Whatever
 is selected, the link line, common volume, horizon fans and MGRS grid draw on top.
 
 | Layer | Needs network | What it is |
@@ -42,14 +37,11 @@ is selected, the link line, common volume, horizon fans and MGRS grid draw on to
 | **OpenTopoMap / OSM** | first view only | Online XYZ raster tiles, cached permanently on disk — an area browsed once stays available offline. Standard flavor only. |
 | **MBTiles pack** | never | Any standard raster `.mbtiles` (yours, one from MOBAC/QGIS, or one built by the in-app downloader). Over-zooms gracefully past the pack's max zoom. |
 
-**Download offline maps…** (map bar, standard flavor) packs an area — the current
+**Download offline maps** (map bar, standard flavor) packs an area — the current
 view or a corridor along the A–B path — into a `.mbtiles` file over a chosen zoom
 range, with a live tile-count/size estimate, a 30,000-tile ceiling, polite paced
 requests, and reuse of already-cached tiles. The finished pack becomes the active
 basemap and can be copied to an air-gapped machine.
-
-The **?** button on every panel header opens a detailed bilingual guide for that
-panel; the **Help** toolbar button opens the full manual (14 topics, PL/EN).
 
 ## Building (Windows-first, core portable)
 
@@ -102,14 +94,6 @@ tools/         make_dted — derive spec-correct DTED 0/1/2 from any GDAL DEM;
 tests/         GoogleTest suite (51 tests): geodesy, terrain, tropo, budget, project
 docs/          model_references.md (every equation cited), third_party.md
 ```
-
-## Reference scenario
-
-Preloaded on first run: Site A 51.50609699 N 15.33150851 E, Site B 52.43470597 N
-15.21931198 E, both 4 m AGL; 4.4 GHz, 500 W (57.0 dBm), 39.1 dBi both ends.
-Pinned in tests: distance ≈ 103.5 km, FSPL ≈ 145.6 dB, azimuths ≈ 355.8°/175.7°.
-Bundled SRTM-derived DTED-0 covers the path, so the full demo — terrain profile,
-lens, model table, budget, availability, PDF — works with the cable unplugged.
 
 ## Author & licence
 
