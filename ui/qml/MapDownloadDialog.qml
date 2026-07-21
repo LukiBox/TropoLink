@@ -7,6 +7,8 @@ import TropoLink
 // into a .mbtiles file that becomes the active basemap when done.
 Dialog {
     id: dialog
+    // Same reason as HelpDialog: a Popup has no parent until opened.
+    parent: Overlay.overlay
     modal: true
     width: 460
     anchors.centerIn: parent

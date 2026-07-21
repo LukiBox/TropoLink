@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls.Basic
 import QtQuick.Layouts
 
 // Status: terrain coverage, active model, compute time, air-gap indicator.
@@ -50,6 +51,28 @@ Rectangle {
             color: Theme.good
             font.pixelSize: Theme.fontSizeSmall
             font.bold: true
+        }
+        // Authorship, always visible. Opens the author's page in the system
+        // browser; no network code is involved in the application itself.
+        Text {
+            id: credit
+            text: qsTr("Made by LukiBox")
+            color: creditArea.containsMouse ? Theme.accent : Theme.textDim
+            font.pixelSize: Theme.fontSizeSmall
+            font.bold: true
+            font.underline: creditArea.containsMouse
+
+            MouseArea {
+                id: creditArea
+                anchors.fill: parent
+                anchors.margins: -4
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked: Qt.openUrlExternally("https://github.com/LukiBox")
+                ToolTip.visible: containsMouse
+                ToolTip.text: "https://github.com/LukiBox"
+                ToolTip.delay: 400
+            }
         }
     }
 }

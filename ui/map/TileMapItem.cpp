@@ -95,6 +95,13 @@ void TileMapItem::setDarkTheme(bool v) {
 }
 
 void TileMapItem::setBasemapPath(const QString& path) {
+    // Guard required, not merely an optimisation: basemapChanged() is the NOTIFY
+    // for this property, so re-emitting it re-evaluates the QML binding that feeds
+    // it, calling straight back in here — a binding loop that also reopened the
+    // MBTiles SQLite file on every pass.
+    if (basemapPath_ == path) {
+        return;
+    }
     basemapPath_ = path;
     if (path.isEmpty()) {
         basemap_.reset();

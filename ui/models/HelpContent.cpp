@@ -12,7 +12,7 @@ struct Topic {
     const char* titleEn;
 };
 
-constexpr std::array<Topic, 14> kTopics{{
+constexpr std::array<Topic, 15> kTopics{{
     {"overview", "Pierwsze kroki", "Getting started"},
     {"map", "Mapa", "The map"},
     {"offline-maps", "Mapy offline — pobieranie", "Offline maps — downloading"},
@@ -27,6 +27,7 @@ constexpr std::array<Topic, 14> kTopics{{
     {"profile", "Profil trasy", "Path profile"},
     {"report", "Raport PDF", "PDF report"},
     {"project", "Projekt i eksport", "Project & export"},
+    {"about", "O programie", "About"},
 }};
 
 QString helpPl(const QString& t) {
@@ -174,7 +175,17 @@ QString helpPl(const QString& t) {
             u"<code>data/modulations.json</code>).</li>"
             u"<li><b>Średnica anteny</b> — używana do obliczeń rozstawień "
             u"dywersyfikacyjnych (P.617-5 §7).</li>"
-            u"</ul>");
+            u"</ul>"
+            u"<h3>Auto-dobór radia</h3>"
+            u"<p>Przycisk <b>„Auto-dobór radia z geometrii”</b> dobiera całą "
+            u"konfigurację (pasmo, średnicę anteny, zysk, moc, modulację) tak, by "
+            u"spełnić docelową dostępność przy bieżącej przepływności — z zapasem "
+            u"projektowym 3 dB. Program przeszukuje realne pasma i średnice anten, "
+            u"licząc każdą kombinację modelem P.617-5, i wybiera tę wymagającą "
+            u"najmniejszej mocy nadajnika (przy remisie: mniejsza antena, niższe "
+            u"pasmo). Uwzględnia stratę sprzężenia apertura–ośrodek, więc nie wpada w "
+            u"pułapkę „większa antena zawsze lepsza”. Po kliknięciu pojawia się krótkie "
+            u"podsumowanie zmian z uzasadnieniem; wszystkie pola pozostają edytowalne.</p>");
     }
     if (t == QLatin1String("atmosphere")) {
         return QStringLiteral(
@@ -310,6 +321,29 @@ QString helpPl(const QString& t) {
             u"<li><b>CSV profilu</b> — kolumny odległość/wysokość/void;</li>"
             u"<li><b>CSV bilansu</b> — pełna kaskada i tabela modeli.</li>"
             u"</ul>");
+    }
+    if (t == QLatin1String("about")) {
+        return QStringLiteral(
+            u"<h3>TropoLink</h3>"
+            u"<p>Przyrząd do projektowania łączy troposferycznych. Wersja programu "
+            u"widoczna jest na pasku tytułu.</p>"
+            u"<h3>Autor</h3>"
+            u"<p><b>Program stworzył LukiBox.</b><br>"
+            u"<a href=\"https://github.com/LukiBox\">https://github.com/LukiBox</a></p>"
+            u"<h3>Licencja</h3>"
+            u"<p>TropoLink udostępniany jest na licencji <b>Apache License 2.0</b> "
+            u"(plik <code>LICENSE</code>). Komponenty zewnętrzne zachowują własne "
+            u"licencje — pełny wykaz w plikach <code>NOTICE</code> i "
+            u"<code>docs/third_party.md</code>.</p>"
+            u"<p>W szczególności <b>Qt 6 wykorzystywane jest na licencji LGPL v3 i "
+            u"linkowane dynamicznie</b>: biblioteki Qt dostarczane są jako osobne pliki "
+            u"DLL obok programu i mogą zostać podmienione, czego wymaga LGPL v3 §4.</p>"
+            u"<p>Model ITM (Longley-Rice) pochodzi z oficjalnej, należącej do domeny "
+            u"publicznej implementacji NTIA i jest dołączony bez zmian.</p>"
+            u"<h3>Prywatność</h3>"
+            u"<p>Brak telemetrii. Jedyny ruch sieciowy, jaki może wystąpić, to "
+            u"świadomie uruchomione przez operatora pobieranie map lub danych SRTM. "
+            u"Wersja Air-Gap nie zawiera w ogóle kodu sieciowego.</p>");
     }
     return {};
 }
@@ -459,7 +493,17 @@ QString helpEn(const QString& t) {
             u"<code>data/modulations.json</code>).</li>"
             u"<li><b>Antenna diameter</b> — used for the diversity separation formulas "
             u"(P.617-5 §7).</li>"
-            u"</ul>");
+            u"</ul>"
+            u"<h3>Auto-design</h3>"
+            u"<p>The <b>“Auto-design radio from geometry”</b> button solves the whole "
+            u"configuration (band, antenna diameter, gain, power, modulation) to meet "
+            u"the target availability at the current data rate, with 3 dB design "
+            u"headroom. It sweeps real bands and dish sizes, scores every combination "
+            u"with the P.617-5 model, and picks the one needing the least transmit "
+            u"power (ties broken toward the smaller antenna and lower band). It accounts "
+            u"for the aperture-to-medium coupling loss, so it does not fall for the "
+            u"“bigger dish is always better” trap. A short summary of the changes and "
+            u"the reasoning appears after the click; every field stays editable.</p>");
     }
     if (t == QLatin1String("atmosphere")) {
         return QStringLiteral(
@@ -595,6 +639,29 @@ QString helpEn(const QString& t) {
             u"<li><b>Profile CSV</b> — distance/elevation/void columns;</li>"
             u"<li><b>Budget CSV</b> — the full waterfall and model table.</li>"
             u"</ul>");
+    }
+    if (t == QLatin1String("about")) {
+        return QStringLiteral(
+            u"<h3>TropoLink</h3>"
+            u"<p>An instrument for designing troposcatter radio links. The program "
+            u"version is shown in the title bar.</p>"
+            u"<h3>Author</h3>"
+            u"<p><b>Made by LukiBox.</b><br>"
+            u"<a href=\"https://github.com/LukiBox\">https://github.com/LukiBox</a></p>"
+            u"<h3>Licence</h3>"
+            u"<p>TropoLink is released under the <b>Apache License 2.0</b> (see the "
+            u"<code>LICENSE</code> file). Third-party components keep their own "
+            u"licences — the full list is in <code>NOTICE</code> and "
+            u"<code>docs/third_party.md</code>.</p>"
+            u"<p>In particular, <b>Qt 6 is used under LGPL v3 and linked "
+            u"dynamically</b>: the Qt libraries ship as separate DLLs beside the "
+            u"executable and can be replaced, as LGPL v3 §4 requires.</p>"
+            u"<p>The ITM (Longley-Rice) model is the official public-domain NTIA "
+            u"implementation, vendored unmodified.</p>"
+            u"<h3>Privacy</h3>"
+            u"<p>No telemetry. The only network traffic that can occur is map or SRTM "
+            u"downloading that the operator starts deliberately. The Air-Gap flavour "
+            u"contains no network code at all.</p>");
     }
     return {};
 }

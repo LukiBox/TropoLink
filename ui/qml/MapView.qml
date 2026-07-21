@@ -248,7 +248,6 @@ Item {
 
     MapDownloadDialog {
         id: downloadDialog
-        parent: mapView
     }
 
     function openDownloadDialog() {
@@ -374,8 +373,11 @@ Item {
         }
 
         // Basemap selector: offline terrain rendering / online sources.
+        // Fixed width: sizing the chip from its own label makes the label's
+        // anchors depend on a parent that depends on the label (binding loop),
+        // and would make the toolbar jump every time the source changes.
         Rectangle {
-            width: sourceLabel.width + 26
+            width: 150
             height: 28
             color: Theme.panel
             opacity: 0.95
@@ -385,10 +387,17 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
                 anchors.leftMargin: 8
+                anchors.right: parent.right
+                anchors.rightMargin: 18
+                elide: Text.ElideRight
+                // Driven by the controller's persisted selection rather than the
+                // map item's own state: that is the source of truth for what the
+                // operator chose, and it avoids depending on TileMapItem's
+                // basemapChanged, which its setters re-emit (binding loop).
                 text: {
-                    if (tiles.hasBasemap) return qsTr("Basemap: pack")
-                    if (tiles.onlineSource === "opentopomap") return "OpenTopoMap"
-                    if (tiles.onlineSource === "osm") return "OSM"
+                    if (mapView.appCtl.mapBasemapPath.length > 0) return qsTr("Basemap: pack")
+                    if (mapView.appCtl.mapOnlineSource === "opentopomap") return "OpenTopoMap"
+                    if (mapView.appCtl.mapOnlineSource === "osm") return "OSM"
                     return qsTr("Terrain (offline)")
                 }
                 color: Theme.text
@@ -439,7 +448,7 @@ Item {
                     onTriggered: basemapDialog.open()
                 }
                 MenuItem {
-                    visible: tiles.hasBasemap
+                    visible: mapView.appCtl.mapBasemapPath.length > 0
                     height: visible ? implicitHeight : 0
                     text: qsTr("Unload basemap pack")
                     onTriggered: mapView.appCtl.mapBasemapPath = ""
@@ -534,6 +543,7 @@ Item {
         }
     }
     Canvas {
+        id: northArrow
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.margins: 12
@@ -561,7 +571,8 @@ Item {
         Component.onCompleted: requestPaint()
         Connections {
             target: Theme
-            function onDarkChanged() { parent.requestPaint() }
+            // 'parent' inside Connections is not the Canvas — address it by id.
+            function onDarkChanged() { northArrow.requestPaint() }
         }
     }
 

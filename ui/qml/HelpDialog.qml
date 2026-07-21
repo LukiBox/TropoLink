@@ -6,9 +6,13 @@ import QtQuick.Layouts
 // Content comes from the controller (bilingual, follows the app language).
 Dialog {
     id: dialog
+    // Anchor to the window overlay explicitly: a Popup has no parent until it is
+    // opened, so sizing from parent.width would evaluate to NaN and the dialog
+    // would open with no size at all — invisible.
+    parent: Overlay.overlay
     modal: true
-    width: Math.min(860, parent.width - 60)
-    height: Math.min(640, parent.height - 60)
+    width: Math.min(860, (parent ? parent.width : 900) - 60)
+    height: Math.min(640, (parent ? parent.height : 700) - 60)
     anchors.centerIn: parent
     padding: 0
 
@@ -131,8 +135,17 @@ Dialog {
                 textFormat: Text.RichText
                 wrapMode: Text.Wrap
                 color: Theme.text
+                linkColor: Theme.accent
                 font.pixelSize: Theme.fontSize + 1
                 lineHeight: 1.25
+                onLinkActivated: (link) => Qt.openUrlExternally(link)
+
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.NoButton // clicks stay with the Text
+                    cursorShape: body.hoveredLink.length > 0 ? Qt.PointingHandCursor
+                                                             : Qt.ArrowCursor
+                }
             }
             ScrollBar.vertical: ScrollBar {}
         }
