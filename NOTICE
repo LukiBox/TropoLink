@@ -1,0 +1,48 @@
+TropoLink — troposcatter link design instrument
+Copyright 2026 LukiBox (https://github.com/LukiBox)
+
+This product is licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License. You may obtain
+a copy of the License in the accompanying LICENSE file or at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
+
+--------------------------------------------------------------------------------
+Third-party components
+--------------------------------------------------------------------------------
+
+This product bundles or links the following third-party components. Their own
+licences apply to them and are not superseded by the Apache License above. See
+docs/third_party.md for the full table, versions and linkage details.
+
+  * Qt 6 — LGPL v3, DYNAMICALLY linked. The Qt libraries are shipped as separate
+    DLLs beside the executable and may be replaced by the user, as LGPL v3 §4
+    requires. No Qt sources are modified.
+
+  * NTIA Irregular Terrain Model (ITM / Longley-Rice) — public domain (a work of
+    the United States Government). Vendored unmodified in third_party/ntia_itm.
+
+  * GDAL (MIT/X), GeographicLib (MIT), nlohmann/json (MIT), libzip (BSD-3),
+    SQLite (public domain), zlib (zlib licence), GoogleTest (BSD-3, tests only).
+
+  * ITU-R P.452 digital refractivity maps (resources/data/N050.TXT, DN50.TXT) —
+    ITU-R Recommendation data files, redistributed as required to implement
+    Recommendation ITU-R P.617-5.
+
+  * resources/terrain/*.dt0 — derived from NASA SRTM (public domain) using
+    tools/make_dted; provenance is marked in-app.
+
+Optional online map services (standard build flavour only, operator-initiated,
+absent entirely from the Air-Gap flavour):
+
+  * OpenStreetMap tiles — map data © OpenStreetMap contributors (ODbL).
+  * OpenTopoMap tiles — style © OpenTopoMap (CC-BY-SA), data © OpenStreetMap
+    contributors, SRTM.
+
+Attribution for whichever tile source is active is displayed on the map, as
+those licences require.

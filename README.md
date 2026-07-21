@@ -1,5 +1,7 @@
 # TropoLink
 
+**Made by [LukiBox](https://github.com/LukiBox)** · Apache-2.0
+
 A professional desktop instrument for the design of **troposcatter (tropospheric
 scatter) radio links**. Drop two pins on an offline map (or type DD / DMS / MGRS /
 UTM), enter the radio parameters, and receive a complete, defensible link design:
@@ -108,3 +110,14 @@ Preloaded on first run: Site A 51.50609699 N 15.33150851 E, Site B 52.43470597 N
 Pinned in tests: distance ≈ 103.5 km, FSPL ≈ 145.6 dB, azimuths ≈ 355.8°/175.7°.
 Bundled SRTM-derived DTED-0 covers the path, so the full demo — terrain profile,
 lens, model table, budget, availability, PDF — works with the cable unplugged.
+
+## Author & licence
+
+**TropoLink is made by [LukiBox](https://github.com/LukiBox).**
+
+Licensed under the **Apache License 2.0** — see [LICENSE](LICENSE). Third-party
+components keep their own licences; [NOTICE](NOTICE) and
+[docs/third_party.md](docs/third_party.md) list every one, with linkage and terms.
+Note in particular that **Qt 6 is used under LGPL v3 and linked dynamically**, so
+the Qt DLLs ship beside the executable and remain replaceable, as LGPL v3 §4
+requires.

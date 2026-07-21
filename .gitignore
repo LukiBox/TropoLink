@@ -7,3 +7,9 @@ CMakeUserPresets.json
 *.user
 compile_commands.json
 Testing/
+
+# Toolchain/installer logs and local editor or agent scratch files
+aqtinstall.log
+*.log
+.idea/
+.vscode/
